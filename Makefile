@@ -11,7 +11,6 @@ deps:
 	yarn policies set-version 1.22.19
 	@if [ "$(OS)" = "Darwin" ]; then \
 		brew install axel openssl postgresql tmux; \
-		curl -L https://desktop.docker.com/mac/main/$(shell uname -m)/Docker.dmg --output Docker.dmg; \
 	else \
 		sudo apt update; \
 		sudo apt install -y axel libssl-dev postgresql tmux git build-essential pkg-config cmake clang lldb lld; \
@@ -28,6 +27,9 @@ deps:
 
 run:
 	cd ${ZKSYNC_HOME}; \
+	sudo service postgresql stop; \
+	. $(HOME)/.nvm/nvm.sh; \
+	. $(HOME)/.cargo/env; \
 	./bin/zk; \
 	./bin/zk init; \
 	tmux new -d -s zksync-server "./bin/zk server"
