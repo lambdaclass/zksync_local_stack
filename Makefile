@@ -16,6 +16,8 @@ deps:
 		sudo apt update; \
 		sudo apt install -y axel libssl-dev postgresql tmux git build-essential pkg-config cmake clang lldb lld; \
 		curl -fsSL https://get.docker.com | sh; \
+		curl -SL https://github.com/docker/compose/releases/download/v2.23.0/docker-compose-linux-x86_64 -o /usr/local/bin/docker-compose; \
+		chmod a+x /usr/local/bin/docker-compose; \
 	fi
 	@if [ ! -n "$(shell which cargo)" ]; then \
 		curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y; \
