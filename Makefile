@@ -29,11 +29,11 @@ deps:
 
 run:
 	cd ${ZKSYNC_HOME}; \
-	sudo service postgresql stop; \
 	. $(HOME)/.nvm/nvm.sh; \
 	. $(HOME)/.cargo/env; \
 	./bin/zk; \
 	./bin/zk init; \
 	tmux new -d -s zksync-server "./bin/zk server"
+	docker-compose up -d
 
 
