@@ -11,11 +11,13 @@ deps:
 	yarn policies set-version 1.22.19
 	@if [ "$(OS)" = "Darwin" ]; then \
 		brew install axel openssl postgresql tmux; \
+		curl -L https://github.com/matter-labs/zksolc-bin/releases/download/v1.3.16/zksolc-macosx-arm64-v1.3.16 --output 			zksolc; \
 	else \
 		sudo apt update; \
 		sudo apt install -y axel libssl-dev postgresql tmux git build-essential pkg-config cmake clang lldb lld; \
 		curl -fsSL https://get.docker.com | sh; \
-		curl -SL https://github.com/docker/compose/releases/download/v2.23.0/docker-compose-linux-x86_64 -o /usr/local/bin/docker-compose; \
+		curl -SL https://github.com/docker/compose/releases/download/v2.23.0/docker-compose-linux-x86_64 -o /usr/local/bi			n/docker-compose; \
+		curl -L https://github.com/matter-labs/zksolc-bin/releases/download/v1.3.16/zksolc-linux-amd64-musl-v1.3.16 --out				put zksolc; \
 		chmod a+x /usr/local/bin/docker-compose; \
 	fi
 	@if [ ! -n "$(shell which cargo)" ]; then \
@@ -33,4 +35,5 @@ run:
 	./bin/zk; \
 	./bin/zk init; \
 	tmux new -d -s zksync-server "./bin/zk server"
+
 
