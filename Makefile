@@ -14,14 +14,24 @@ deps:
 		curl -SL https://github.com/docker/compose/releases/download/v2.23.0/docker-compose-linux-x86_64 -o /usr/local/bin/docker-compose; \
 		curl -L https://github.com/matter-labs/zksolc-bin/releases/download/v1.3.16/zksolc-macosx-arm64-v1.3.16 --output zksolc; \
 		chmod a+x zksolc; \
+		curl -L https://github.com/ethereum/solidity/releases/download/v0.8.19/solc-macos --output solc; \
+		chmod a+x solc; \
+		mkdir -p Library/Application\ Support/eth-compilers; \
+		cp solc Library/Application\ Support/eth-compilers; \
+		cp zksolc Library/Application\ Support/eth-compilers; \
 	else \
 		sudo apt update; \
 		sudo apt install -y axel libssl-dev postgresql tmux git build-essential pkg-config cmake clang lldb lld; \
 		curl -fsSL https://get.docker.com | sh; \
 		curl -SL https://github.com/docker/compose/releases/download/v2.23.0/docker-compose-linux-x86_64 -o /usr/local/bin/docker-compose; \
 		curl -L https://github.com/matter-labs/zksolc-bin/releases/download/v1.3.16/zksolc-linux-amd64-musl-v1.3.16 --output zksolc; \
+		curl -L https://github.com/ethereum/solidity/releases/download/v0.8.19/solc-static-linux --output solc; \
+		chmod a+x solc; \
 		chmod a+x /usr/local/bin/docker-compose; \
 		chmod a+x zksolc; \
+		mkdir -p $(HOME)/.config; \
+		cp solc $(HOME)/.config; \
+		cp zksolc $(HOME)/.config; \
 	fi
 	@if [ ! -n "$(shell which cargo)" ]; then \
 		curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y; \
@@ -37,13 +47,15 @@ run:
 	@if [ "$(OS)" = "Linux" ]; then \
 		sudo service postgresql stop; \
 	fi
+	
 	# Run server
 	cd ${ZKSYNC_HOME}; \
 	. $(HOME)/.nvm/nvm.sh; \
 	. $(HOME)/.cargo/env; \
 	./bin/zk; \
 	./bin/zk init; \
-	tmux new -d -s zksync-server "./bin/zk server"
+	tmux new -d -s zksync-server; \
+	tmux send-keys -t zksync-server "./bin/zk server" Enter; \
 	
 	# Run explorer
 	# cd ../block-explorer; \
