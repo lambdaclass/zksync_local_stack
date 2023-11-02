@@ -52,5 +52,11 @@ run:
 	# npm run db:create; \
 	# npm run dev;
 
+terra-init:
+	terraform -chdir=infrastructure/terraform init
 
+terra-apply:
+	terraform -chdir=infrastructure/terraform apply 
 
+terra-destroy:
+	terraform -chdir=infrastructure/terraform destroy 
