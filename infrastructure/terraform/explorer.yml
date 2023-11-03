@@ -1,3 +1,4 @@
+#cloud-config
 users:
   - name: root
     groups: users, admin
@@ -27,4 +28,4 @@ runcmd:
   - rm /root/node-v18.18.0-linux-x64.tar.xz
   - npm install --global yarn
   - git clone https://github.com/matter-labs/block-explorer.git /root/block-explorer
-  - cd /root/block-explorer && npm install && $ npm run hyperchain:configure && npm run db:create && npm run dev
+  - cd /root/block-explorer && npm install && npm run hyperchain:configure && npm run db:create && npm run dev

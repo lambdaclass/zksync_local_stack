@@ -14,10 +14,6 @@ variable "http_port" {
     default = "80"
 }
 
-variable "instances" {
-    default = "1"
-}
-
 variable "server_type" {
     default = "cpx31"
 }

@@ -1,6 +1,5 @@
-resource "hcloud_server" "web" {
-  count       = var.instances
-  name        = "zksync-server-${count.index}"
+resource "hcloud_server" "server" {
+  name        = "zksync-server"
   image       = var.os_type
   server_type = var.server_type
   location    = var.location
@@ -11,9 +10,8 @@ resource "hcloud_server" "web" {
   user_data = file("server.yml")
 }
 
-resource "hcloud_server" "web" {
-  count       = var.instances
-  name        = "zksync-explorer-${count.index}"
+resource "hcloud_server" "explorer" {
+  name        = "zksync-explorer"
   image       = var.os_type
   server_type = var.server_type
   location    = var.location

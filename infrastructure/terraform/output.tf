@@ -1,13 +1,7 @@
-output "web_servers_status" {
-  value = {
-    for server in hcloud_server.web :
-    server.name => server.status
-  }
+output "server_ips" {
+ value = hcloud_server.server.ipv4_address
 }
 
-output "web_servers_ips" {
-  value = {
-    for server in hcloud_server.web :
-    server.name => server.ipv4_address
-  }
+output "explorer_ips" {
+ value = hcloud_server.explorer.ipv4_address
 }

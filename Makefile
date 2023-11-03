@@ -55,6 +55,9 @@ run:
 terra-init:
 	terraform -chdir=infrastructure/terraform init
 
+terra-plan:
+	terraform -chdir=infrastructure/terraform plan
+
 terra-apply:
 	terraform -chdir=infrastructure/terraform apply 
 

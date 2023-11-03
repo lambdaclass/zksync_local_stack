@@ -1,14 +1,25 @@
-resource "hcloud_volume" "web_server_volume" {
-  count    = var.instances
-  name     = "zk-server-volume-${count.index}"
+resource "hcloud_volume" "server_volume" {
+  name     = "zk-server-volume"
   size     = var.disk_size
   location = var.location
   format   = "xfs"
 }
 
-resource "hcloud_volume_attachment" "web_vol_attachment" {
-  count     = var.instances
-  volume_id = hcloud_volume.web_server_volume[count.index].id
-  server_id = hcloud_server.web[count.index].id
+resource "hcloud_volume" "explorer_volume" {
+  name     = "zk-explorer-volume"
+  size     = var.disk_size
+  location = var.location
+  format   = "xfs"
+}
+
+resource "hcloud_volume_attachment" "server_vol_attachment" {
+  volume_id = hcloud_volume.server_volume.id
+  server_id = hcloud_server.server.id
+  automount = true
+}
+
+resource "hcloud_volume_attachment" "explorer_vol_attachment" {
+  volume_id = hcloud_volume.explorer_volume.id
+  server_id = hcloud_server.explorer.id
   automount = true
 }
