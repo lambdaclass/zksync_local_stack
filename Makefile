@@ -1,5 +1,5 @@
 OS := $(shell uname -s)
-export ZKSYNC_HOME = $(shell pwd)/zksync-era
+export ZKSYNC_HOME=$(shell pwd)/zksync-era
 
 deps:
 	curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.5/install.sh | bash
@@ -16,9 +16,9 @@ deps:
 		chmod a+x zksolc; \
 		curl -L https://github.com/ethereum/solidity/releases/download/v0.8.19/solc-macos --output solc; \
 		chmod a+x solc; \
-		mkdir -p Library/Application\ Support/eth-compilers; \
-		cp solc Library/Application\ Support/eth-compilers; \
-		cp zksolc Library/Application\ Support/eth-compilers; \
+		mkdir -p $(HOME)/Library/Application\ Support/eth-compilers; \
+		mv solc $(HOME)/Library/Application\ Support/eth-compilers; \
+		mv zksolc $(HOME)/Library/Application\ Support/eth-compilers; \
 	else \
 		sudo apt update; \
 		sudo apt install -y axel libssl-dev postgresql tmux git build-essential pkg-config cmake clang lldb lld; \
@@ -30,8 +30,8 @@ deps:
 		chmod a+x /usr/local/bin/docker-compose; \
 		chmod a+x zksolc; \
 		mkdir -p $(HOME)/.config; \
-		cp solc $(HOME)/.config; \
-		cp zksolc $(HOME)/.config; \
+		mv solc $(HOME)/.config; \
+		mv zksolc $(HOME)/.config; \
 	fi
 	@if [ ! -n "$(shell which cargo)" ]; then \
 		curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y; \
@@ -48,21 +48,12 @@ run:
 		sudo service postgresql stop; \
 	fi
 	
-	# Run server
-	cd ${ZKSYNC_HOME}; \
+	cd $${ZKSYNC_HOME}; \
 	. $(HOME)/.nvm/nvm.sh; \
 	. $(HOME)/.cargo/env; \
-	./bin/zk; \
-	./bin/zk init; \
+	tmux kill-session -t zksync-server; \
 	tmux new -d -s zksync-server; \
+	tmux send-keys -t zksync-server "./bin/zk" Enter; \
+	tmux send-keys -t zksync-server "./bin/zk init" Enter; \
 	tmux send-keys -t zksync-server "./bin/zk server" Enter; \
-	
-	# Run explorer
-	# cd ../block-explorer; \
-	# npm install; \
-	# npm run hyperchain:configure; \
-	# npm run db:create; \
-	# npm run dev;
-
-
 
