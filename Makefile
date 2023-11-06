@@ -37,7 +37,7 @@ deps:
 	fi
 	@if [ ! -n "$(shell which cargo)" ]; then \
 		curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y; \
-		source ~/.cargo/env
+		source ~/.cargo/env; \
 	fi
 	. $(HOME)/.cargo/env; \
 	cargo install sqlx-cli --version 0.5.13; \
