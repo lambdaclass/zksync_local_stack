@@ -30,7 +30,10 @@ deps:
 		curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y; \
 	fi
 	. $(HOME)/.cargo/env; \
-	cargo install sqlx-cli --version 0.5.13; \
+	cargo install sqlx-cli --version 0.5.13;
+	@if [ "$(OS)" = "Linux" ]; then \
+		sudo service postgresql stop; \
+	fi
 	rm -rf zksync-era; \
 	git clone -b boojum-integration https://github.com/matter-labs/zksync-era; \
 	rm -rf block-explorer;
@@ -43,13 +46,11 @@ deps:
 	npm install --global yarn; \
 	yarn policies set-version 1.22.19; \
 	cd ${ZKSYNC_HOME}; \
+	. $(HOME)/.cargo/env; \
 	./bin/zk; \
 	./bin/zk init
 
 run:
-	@if [ "$(OS)" = "Linux" ]; then \
-		sudo service postgresql stop; \
-	fi
 	. $(HOME)/.nvm/nvm.sh; \
 	. $(HOME)/.cargo/env; \
 	tmux kill-session -t zksync-server; \
