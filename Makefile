@@ -56,4 +56,5 @@ run:
 	tmux send-keys -t zksync-server "./bin/zk" Enter; \
 	tmux send-keys -t zksync-server "./bin/zk init" Enter; \
 	tmux send-keys -t zksync-server "./bin/zk server" Enter; \
+	tmux attach-session -t zksync-server; \
 
