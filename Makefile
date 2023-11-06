@@ -2,6 +2,13 @@ OS := $(shell uname -s)
 export ZKSYNC_HOME=$(shell pwd)/zksync-era
 
 deps:
+	curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.5/install.sh | bash
+	. $(HOME)/.nvm/nvm.sh; \
+	nvm install 18.0.0; \
+	nvm use 18.0.0; \
+	npm i -g npm@9; \
+	npm install --global yarn; \
+	yarn policies set-version 1.22.19
 	@if [ "$(OS)" = "Darwin" ]; then \
 		brew install axel openssl postgresql tmux; \
 		curl -SL https://github.com/docker/compose/releases/download/v2.23.0/docker-compose-linux-x86_64 -o /usr/local/bin/docker-compose; \
@@ -35,16 +42,6 @@ deps:
 	git clone -b boojum-integration https://github.com/matter-labs/zksync-era; \
 	rm -rf block-explorer;
 	git clone https://github.com/matter-labs/block-explorer; \
-	curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.5/install.sh | bash; \
-	. $(HOME)/.nvm/nvm.sh; \
-	nvm install 18.0.0; \
-	nvm use 18.0.0; \
-	npm i -g npm@9; \
-	npm install --global yarn; \
-	yarn policies set-version 1.22.19; \
-	cd ${ZKSYNC_HOME}; \
-	./bin/zk; \
-	./bin/zk init
 
 run:
 	@if [ "$(OS)" = "Linux" ]; then \
@@ -55,4 +52,6 @@ run:
 	tmux kill-session -t zksync-server; \
 	tmux new -d -s zksync-server; \
 	tmux send-keys -t zksync-server "cd ${ZKSYNC_HOME}" Enter; \
+	tmux send-keys -t zksync-server "./bin/zk" Enter; \
+	tmux send-keys -t zksync-server "./bin/zk init" Enter; \
 	tmux send-keys -t zksync-server "./bin/zk server" Enter
