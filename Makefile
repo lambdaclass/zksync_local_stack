@@ -47,14 +47,12 @@ deps:
 	./bin/zk init
 
 run:
-	. $(HOME)/.nvm/nvm.sh; \
-	. $(HOME)/.cargo/env; \
 	@if [ "$(OS)" = "Linux" ]; then \
 		sudo service postgresql stop; \
-		. $(HOME)/.bashrc; \
-	fi \
+	fi
+	. $(HOME)/.nvm/nvm.sh; \
+	. $(HOME)/.cargo/env; \
 	tmux kill-session -t zksync-server; \
 	tmux new -d -s zksync-server; \
 	tmux send-keys -t zksync-server "cd ${ZKSYNC_HOME}" Enter; \
 	tmux send-keys -t zksync-server "./bin/zk server" Enter
-
