@@ -2,7 +2,6 @@ OS := $(shell uname -s)
 export ZKSYNC_HOME=$(shell pwd)/zksync-era
 
 deps:
-	curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.5/install.sh | bash
 	@if [ "$(OS)" = "Darwin" ]; then \
 		brew install axel openssl postgresql tmux; \
 		curl -SL https://github.com/docker/compose/releases/download/v2.23.0/docker-compose-linux-x86_64 -o /usr/local/bin/docker-compose; \
@@ -13,18 +12,18 @@ deps:
 		mkdir -p $(HOME)/Library/Application\ Support/eth-compilers; \
 		mv solc $(HOME)/Library/Application\ Support/eth-compilers; \
 		mv zksolc $(HOME)/Library/Application\ Support/eth-compilers; \
-		curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.5/install.sh | bash \
+		curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.5/install.sh | bash; \
 		. $(HOME)/.nvm/nvm.sh; \
 		nvm install 18.0.0; \
 		nvm use 18.0.0; \
 		npm i -g npm@9; \
 		npm install --global yarn; \
-		yarn policies set-version 1.22.19 \
+		yarn policies set-version 1.22.19; \
 	else \
 		sudo apt update; \
 		sudo apt install -y axel libssl-dev postgresql tmux git build-essential pkg-config cmake clang lldb lld nodejs npm; \
-		npm install --global yarn \
-		yarn policies set-version 1.22.19 \
+		npm install --global yarn; \
+		yarn policies set-version 1.22.19; \
 		curl -fsSL https://get.docker.com | sh; \
 		curl -SL https://github.com/docker/compose/releases/download/v2.23.0/docker-compose-linux-x86_64 -o /usr/local/bin/docker-compose; \
 		curl -L https://github.com/matter-labs/zksolc-bin/releases/download/v1.3.16/zksolc-linux-amd64-musl-v1.3.16 --output zksolc; \
