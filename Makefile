@@ -3,7 +3,8 @@ export ZKSYNC_HOME=$(shell pwd)/zksync-era
 
 deps:
 	@if [ "$(OS)" = "Darwin" ]; then \
-		brew install axel openssl postgresql tmux; \
+		brew install axel openssl postgresql tmux nvm; \
+		nvm install 18
 		curl -SL https://github.com/docker/compose/releases/download/v2.23.0/docker-compose-linux-x86_64 -o /usr/local/bin/docker-compose; \
 		curl -L https://github.com/matter-labs/zksolc-bin/releases/download/v1.3.16/zksolc-macosx-arm64-v1.3.16 --output zksolc; \
 		chmod a+x zksolc; \
@@ -48,6 +49,10 @@ deps:
 	./bin/zk init
 
 run:
+	@if [ "$(OS)" = "Darwin" ]; then \
+		. $(HOME)/.nvm/nvm.sh; \
+		nvm use 18; \
+	fi
 	. $(HOME)/.cargo/env; \
 	tmux kill-session -t zksync-server; \
 	tmux new -d -s zksync-server; \
