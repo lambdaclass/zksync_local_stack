@@ -52,4 +52,5 @@ run:
 	tmux kill-session -t zksync-server; \
 	tmux new -d -s zksync-server; \
 	tmux send-keys -t zksync-server "cd ${ZKSYNC_HOME}" Enter; \
-	tmux send-keys -t zksync-server "./bin/zk server" Enter
+	tmux send-keys -t zksync-server "./bin/zk server" Enter; \
+	docker-compose up -d
