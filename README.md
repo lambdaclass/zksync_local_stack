@@ -1,5 +1,22 @@
 # zkSync full stack 
 
+```mermaid
+flowchart LR
+    A["Operator"] --> |Produces block| F[Prover Gateway]
+    F --> |Inserts into DB| B["Postgress DB"]
+    B --> |Retrieves proven block \nafter compression| F
+    B --> C["Witness"]
+    C --- C1["Basic Circuits"]
+    C --- C2["Leaf Aggregation"]
+    C --- C3["Node Aggregation"]
+    C --- C4["Scheduler"]
+    C --> B
+    B --> D["Prover"]
+    D --> |Proven Block| B
+    B --> E["Compressor"]
+    E --> |Compressed block| B
+```
+
 ZKSync full stack covers a set of tools designed facilitate the interaction with the complete development cycle in the zkSync Layer-2 blockchain.
 
 The stack mainly consist of:
@@ -8,7 +25,6 @@ The stack mainly consist of:
 - Block explorer
 - Grafana and observavility tools
 - Verifier with CPU and GPU support
-
 
 ## Starting the stack
 
@@ -56,7 +72,7 @@ Other Docker containers are running Grafana and Prometheus, tools for monitoring
 
 To begin testing the local nodes and interacting with them, this repository offers a basic `ERC20` contract for your use.
 
-To deploy the contract and call its functions, start by cloning the [zksync-era-cli](https://github.com/lambdaclass/zksync_era_cli) tool repository. This tool provides a range of useful commands, but for this example, you'll primarily use `deploy`, `call`, and `send`.
+To deploy the contract and call its functions, start by cloning the [zksync-era-cli](https://github.com/lambdaclass/zksync_era_cli) tool repository. This tool provides a range of useful commands, but for this example, you'll primarily use `deploy` and `call` commands.
 
 In all the following examples, we'll rely on a specific private key: `0x27593fea79697e947890ecbecce7901b0008345e5d7259710d0dd5e500d040be`. This key belongs to one of the rich wallets deployed in the local node for testing purposes.
 
@@ -80,7 +96,7 @@ INFO: `0x...`
 
 This address represents where the contract is now deployed. After deploying the contract, you can interact with it in various ways. For instance, you can retrieve the name of the deployed token by calling the following function:
 
-```bash
+```
 zksync-era-cli --l2-port 3050 call 
 --contract <address> 
 --function "name()" 
