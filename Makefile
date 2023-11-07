@@ -1,5 +1,6 @@
 OS := $(shell uname -s)
 export ZKSYNC_HOME=$(shell pwd)/zksync-era
+export PATH:=$(ZKSYNC_HOME)/bin:$(PATH)
 
 deps:
 	@if [ "$(OS)" = "Darwin" ]; then \
@@ -44,15 +45,42 @@ deps:
 	npm install --global yarn; \
 	yarn policies set-version 1.22.19; \
 	. $(HOME)/.cargo/env; \
-	./bin/zk; \
-	./bin/zk init
+	zk; \
+	zk init; \
+	git remote add lambdaclass https://github.com/lambdaclass/zksync-era; \
+	git fetch lambdaclass; \
+	git checkout lambdaclass/improve-prover-setup; \
+	prover/setup.sh; \
+	prover/witness_generator/src/main.rs; \
+	rustup install nightly-2023-07-21; \
 
 run:
 	. $(HOME)/.cargo/env; \
 	tmux kill-session -t zksync-server; \
+	
+	cd ${ZKSYNC_HOME}; \
+	./prover/setup.sh; \
+
 	tmux new -d -s zksync-server; \
 	tmux send-keys -t zksync-server "cd ${ZKSYNC_HOME}" Enter; \
 	tmux send-keys -t zksync-server "./bin/zk up" Enter; \
-	tmux send-keys -t zksync-server "./bin/zk server" Enter; \
+	tmux send-keys -t zksync-server "./bin/zk server --components=api,eth,tree,state_keeper,housekeeper,proof_data_handler" Enter; \
+		
+	tmux new -d -s zksync-prover; \
+	tmux send-keys -t zksync-prover "cd ${ZKSYNC_HOME}" Enter; \
+	tmux send-keys -t zksync-prover "./bin/zk f cargo run --release --bin zksync_prover_fri_gateway" Enter; \
+
+	tmux new -d -s zksync-witness-generator; \
+	tmux send-keys -t zksync-witness-generator "cd ${ZKSYNC_HOME}" Enter; \
+	tmux send-keys -t zksync-witness-generator "API_PROMETHEUS_LISTENER_PORT=3116 ./bin/zk f cargo run --release --bin zksync_witness_generator -- --all_rounds" Enter; \
+
+	tmux new -d -s zksync-prover; \
+	tmux send-keys -t zksync-prover "cd ${ZKSYNC_HOME}" Enter; \
+	tmux send-keys -t zksync-prover "./bin/zk f cargo run --release --bin zksync_prover_fri" Enter; \
+
+	tmux new -d -s zksync-block-compressor; \
+	tmux send-keys -t zksync-block-compressor "cd ${ZKSYNC_HOME}" Enter; \
+	tmux send-keys -t zksync-block-compressor "./bin/zk f cargo run --release --bin zksync_prover_fri" Enter; \
+
 	docker-compose up -d; \
 	tmux a -t zksync-server; \
