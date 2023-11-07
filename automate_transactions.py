@@ -23,19 +23,26 @@ random_wallets = [{"address": "0xaEcaE5bAcBbE8be2854711243df66c3520751bE0",
                   "private_key": "ad630e498af2b1590d7a6f7e20d64c7da69bd52324b503d4498ca66459710b10"},
                   ]
 
-for _ in range(100):
-    subprocess.run(["zksync-era-cli", 
-                    "--l2-port", "3050", "transfer",
-                    "--amount", str(random.randrange(1,200)),
-                    "--from", rich_wallets[0]['address'],
-                    "--to", random_wallets[random.randrange(0,4)]['address'],
-                    "--chain-id", "270"])
-    
-    subprocess.run(["zksync-era-cli",
-                    "--l2-port", "3050", "send",
-                    "--contract", erc20_address,
-                    "--function", "transfer(address, uint256)",
-                    "--args", random_wallets[random.randrange(0,4)]['address'], str(random.randrange(1,200)),
-                    "--output-types", "bool",
-                    "--private-key", arc20_private_key,
-                    "--chain-id", "270"])
+def main():
+    for _ in range(100):
+        try:
+            subprocess.run(["zksync-era-cli",
+                            "--l2-port", "3050", "transfer",
+                            "--amount", str(random.randrange(1,200)),
+                            "--from", rich_wallets[0]['address'],
+                            "--to", random_wallets[random.randrange(0,4)]['address'],
+                            "--chain-id", "270"])
+            subprocess.run(["zksync-era-cli",
+                            "--l2-port", "3050", "send",
+                            "--contract", erc20_address,
+                            "--function", "transfer(address, uint256)",
+                            "--args", random_wallets[random.randrange(0,4)]['address'], str(random.randrange(1,200)),
+                            "--output-types", "bool",
+                            "--private-key", arc20_private_key,
+                            "--chain-id", "270"])
+        except subprocess.CalledProcessError as e:
+            print(f'Command {e.cmd} failed with error {e.returncode}')
+
+
+if __name__ == "__main__":
+    main()
