@@ -13,8 +13,9 @@ deps:
 		mv solc $(HOME)/Library/Application\ Support/eth-compilers; \
 		mv zksolc $(HOME)/Library/Application\ Support/eth-compilers; \
 	else \
+		curl -s https://raw.githubusercontent.com/nodesource/distributions/master/scripts/nsolid_setup_deb.sh | sh -s "18"; \
 		sudo apt update; \
-		sudo apt install -y axel libssl-dev postgresql tmux git build-essential pkg-config cmake clang lldb lld; \
+		sudo apt install -y axel libssl-dev nsolid postgresql tmux git build-essential pkg-config cmake clang lldb lld; \
 		curl -fsSL https://get.docker.com | sh; \
 		curl -SL https://github.com/docker/compose/releases/download/v2.23.0/docker-compose-linux-x86_64 -o /usr/local/bin/docker-compose; \
 		curl -L https://github.com/matter-labs/zksolc-bin/releases/download/v1.3.16/zksolc-linux-amd64-musl-v1.3.16 --output zksolc; \
@@ -38,20 +39,15 @@ deps:
 	git clone -b boojum-integration https://github.com/matter-labs/zksync-era; \
 	rm -rf block-explorer;
 	git clone https://github.com/matter-labs/block-explorer; \
-	curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.5/install.sh | bash; \
-	. $(HOME)/.nvm/nvm.sh; \
-	nvm install 18.0.0; \
-	nvm use 18.0.0; \
+	cd ${ZKSYNC_HOME}; \
 	npm i -g npm@9; \
 	npm install --global yarn; \
 	yarn policies set-version 1.22.19; \
-	cd ${ZKSYNC_HOME}; \
 	. $(HOME)/.cargo/env; \
 	./bin/zk; \
 	./bin/zk init
 
 run:
-	. $(HOME)/.nvm/nvm.sh; \
 	. $(HOME)/.cargo/env; \
 	tmux kill-session -t zksync-server; \
 	tmux new -d -s zksync-server; \
