@@ -1,4 +1,4 @@
-# zkSync full stack 
+# zkSync stack 
 
 ```mermaid
 flowchart LR
