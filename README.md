@@ -113,7 +113,7 @@ INFO: String(`lambdacoin`)
 
 This is the initial name of your token. Additionally, you can examine the initial balance of the address you passed as an argument for deployment using the `constructor-args` flag. To check the initial balance, execute the following command:
 
-```bash
+```
 zksync-era-cli --l2-port 3050 call 
 --contract <address> 
 --function "balanceOf(address)" 
@@ -130,6 +130,7 @@ INFO: UINT256(1000000)
 ```
 
 This indicates the initial balance of the specified address: 1,000,000 tokens.
+
 There's another function to transfer some of the tokens to another address, in order to do that we will send a transaction calling that function.
 
 ```
@@ -146,6 +147,7 @@ Where the `to_address` would be the receiver address.
 The output should look like the following:
 
 ```
-
+INFO: `0x...`
 ```
 
+Representing the hash of the executed transaction.
