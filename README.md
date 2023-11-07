@@ -20,9 +20,8 @@ flowchart LR
 ZKSync full stack covers a set of tools designed facilitate the interaction with the complete development cycle in the zkSync Layer-2 blockchain.
 
 The stack mainly consist of:
-- A L1 node inside Docker
-- A L2 local node
-- Block explorer
+- [L1 node inside Docker and L2 node](https://github.com/matter-labs/zksync-era)
+- [Block explorer](https://github.com/matter-labs/block-explorer#%EF%B8%8F-setting-up-env-variables)
 - Grafana and observavility tools
 - Verifier with CPU and GPU support
 
