@@ -55,4 +55,11 @@ run:
 	tmux send-keys -t zksync-server "./bin/zk up" Enter; \
 	tmux send-keys -t zksync-server "./bin/zk server" Enter; \
 	docker-compose up -d; \
-	tmux a -t zksync-server; \
+	tmux kill-session -t zksync-explorer; \
+	tmux new -s zksync-explorer; \
+	tmux send-keys -t zksync-server "cd block-explorer" Enter; \
+	tmux send-keys -t zksync-server "npm install" Enter; \
+	tmux send-keys -t zksync-server "npm run hyperchain:configure" Enter; \
+	tmux send-keys -t zksync-server "npm run db:create" Enter; \
+	tmux send-keys -t zksync-server "npm run dev" Enter; \
+
