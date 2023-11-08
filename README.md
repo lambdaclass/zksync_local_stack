@@ -1,67 +1,153 @@
-# zkSync full stack deployment walkthrough
-This tutorial will cover how to start a zksync node, compile and deploy a contract and, finally, see it in the explorer.
-This was tested on mac and linux (ubuntu), and the instructions ahead should work for both platforms.
+# zkSync stack 
 
-## Dependencies
-- solidity 0.8.19
-    - https://github.com/ethereum/solidity/releases/tag/v0.8.19
-    - scroll down to the assets section
-    - download the binary matching your platform or build from source. This tutorial assumes the former.
-    - `chmod a+x solc-(macos | linux)`
-    - on macos: `xattr -d com.apple.quarantine solc-(macos | linux)`
-- node >= 18.18.0
-- npm >= 9.0.0
-- yarn 1.22.19
-- axel
-- docker
-- clang
-    - linux: build-essential pkg-config cmake clang lldb lld
-    - macos: Xcode
-- openSSL
-    - linux: libssl-dev
-- postgres
-    - linux: postgresql
-- rust
-    - recommended: `curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh`
-    - `cargo install sqlx-cli`
-- python
-- tmux (optional)
+```mermaid
+flowchart LR
+    A["Operator"] --> |Produces block| F[Prover Gateway]
+    F --> |Inserts into DB| B["Postgress DB"]
+    B --> |Retrieves proven block \nafter compression| F
+    B --> C["Witness"]
+    C --- C1["Basic Circuits"]
+    C --- C2["Leaf Aggregation"]
+    C --- C3["Node Aggregation"]
+    C --- C4["Scheduler"]
+    C --> B
+    B --> D["Prover"]
+    D --> |Proven Block| B
+    B --> E["Compressor"]
+    E --> |Compressed block| B
+```
 
-## Installation
-Now, to install the zksync node, compiler and explorer:
-### zksync-era (geth and zksync nodes)
-- clone the repo https://github.com/matter-labs/zksync-era
-- export the ZKSYNC_HOME environmental variable on your `.zshrc` or `.bashrc` file
-    - `export ZKSYNC_HOME=/path/to/repo`
-    - `export PATH="$ZKSYNC_HOME:$PATH"`
-- zk (enabled after the previous step)
-- zk init
-- zk up
-- zk server (locks the terminal, tmux recommended)
+ZKSync full stack covers a set of tools designed facilitate the interaction with the complete development cycle in the zkSync Layer-2 blockchain.
 
-### zksync explorer
-- clone the repo https://github.com/matter-labs/block-explorer
-- cd into block-explorer
-- npm install
-- npm run hyperchain:configure
-- npm run db:create
-- npm run dev (tmux recommended)
+The stack mainly consist of:
+- [L1 node inside Docker and L2 node](https://github.com/matter-labs/zksync-era)
+- [Block explorer](https://github.com/matter-labs/block-explorer#%EF%B8%8F-setting-up-env-variables)
+- Grafana and observability tools
+- Verifier with CPU and GPU support
 
-### zksolc compiler
-After cloning the repo https://github.com/matter-labs/zksolc-bin.git and going into it's directory `cd zksloc-bin`, you will find a few folders for different operative systems and CPU architectures. Choose the one that matches your system, inside of it you will find multiple versions of the `zksolc` compiler. For convenience, you should copy the latest one into a more accessible path and change the name to something like `zksolc`.
+## Starting the stack
 
-## Setup
-Create a new cargo project `cargo init zksync_full_stack`
-Edit the `Cargo.toml` file to add `zksync-web3-rs` and `tokio` as dependencies
-```toml
-[dependencies]
-zksync-web3-rs = "0.1.1"
-tokio = { version = "1", features = ["macros", "process"] }
-``` 
+**Please note that Docker is required to run the following commands.**
 
-Create your contract(s). For this example we'll be using an `ERC20` implementation in solidity.
+To get started, we need to install all the essential dependencies. You can achieve this by running the following command:
 
-Generate the abi for the contract 
-Compile contract `./zksolc --solc ./<path_to_solc> <path_to_contract> --bin -o <build_directory>`
+```bash
+make deps
+```
 
-Now we need to interact with the contract. We can refer to https://era.zksync.io/docs/api/rust/contract-deployment-and-interaction.html and pretty much copy and paste the code there, modifying a few names to match your contract. Also, you will need to have enough gas to deploy it.
+This command not only installs the necessary dependencies for running all the tools in the stack but also downloads the binaries for the `zksolc` and `solc` compilers. These compilers are crucial for executing some of the examples provided in the subsequent sections.
+
+Once all the dependencies are successfully installed, you can initiate the entire stack with a single command:
+
+```bash
+make run
+```
+
+This command will launch all the components of the ZKSync full stack, allowing you to dive into the development environment quickly.
+
+## Local Nodes
+
+The mentioned command facilitates the creation of essential Docker containers for your development environment. This includes setting up a PostgreSQL database and the L1 local Geth node. Moreover, it compiles and deploys all the necessary contracts for the L2 local node to function. Please note that this process may take a moment to complete.
+
+In this context, it's essential to mention that many of the tools used will take control of the terminal. Therefore, we've installed `tmux` in the previous step to manage different commands and sessions for each tool. For the L2 node, the session is named `zksync-server`. To view the logs and observe the server in action, you can use the following command: `tmux a -t zksync-server`.
+
+The L1 Geth node runs at `http://localhost:8545`, while the L2 node is available at `http://localhost:3050`.
+
+## Block Explorer
+
+The development environment includes a block explorer to inspect transactions and proofs within the nodes. This explorer runs within a `tmux` session named `zksync-explorer`. You can view it by executing the following command: `tmux a -t zksync-explorer`. To access the explorer in your web browser, navigate to `http://localhost:3010`.
+
+Additionally, you can access the API at `http:localhost/3020` and the worker at `http://localhost:3001`.
+
+## Grafana and Observability
+
+Other Docker containers are running Grafana and Prometheus, tools for monitoring and creating dashboards. To access a helpful dashboard that provides information about every transaction executed by the node, open your web browser and visit `http://localhost:3000`.
+
+## Verifier
+
+**Work in Progress**
+
+## Deployment and Contract Interaction
+
+To begin testing the local nodes and interacting with them, this repository offers a basic `ERC20` contract for your use.
+
+To deploy the contract and call its functions, start by cloning the [zksync-era-cli](https://github.com/lambdaclass/zksync_era_cli) tool repository. This tool provides a range of useful commands, but for this example, you'll primarily use `deploy`, `call` and `send` commands.
+
+In all the following examples, we'll rely on a specific private key: `0x27593fea79697e947890ecbecce7901b0008345e5d7259710d0dd5e500d040be`. This key belongs to one of the rich wallets deployed in the local node for testing purposes. The address derived from this private key is `0xb51473Db0e8e001fA0Ccbd5B80CEc36BEF3d4306`, we use it as argument for the constructor to initialize with a certain number of tokens. 
+
+Once the node is up and running, use the following command to deploy our `ERC20` contract, a standard token:
+
+```bash
+zksync-era-cli --l2-port 3050 deploy 
+--project-root contracts/ 
+--contract contracts/ERC20.sol  
+--contract-name ERC20 
+--constructor-args 0xb51473Db0e8e001fA0Ccbd5B80CEc36BEF3d4306 
+--private-key 0x27593fea79697e947890ecbecce7901b0008345e5d7259710d0dd5e500d040be 
+--chain-id 270
+```
+
+If the deployment is successful, you'll receive the transaction receipt and an output similar to this:
+
+```
+INFO: `0x...`
+```
+
+This address represents where the contract is now deployed. After deploying the contract, you can interact with it in various ways. For instance, you can retrieve the name of the deployed token by calling the following function:
+
+```
+zksync-era-cli --l2-port 3050 call 
+--contract <address> 
+--function "name()" 
+--output-types string 
+--private-key 0x27593fea79697e947890ecbecce7901b0008345e5d7259710d0dd5e500d040be 
+--chain-id 270
+```
+
+Where the `address` corresponds to the address of the deployed `ERC20` contract.
+The output will look like this:
+
+```
+INFO: String(`lambdacoin`)
+```
+
+This is the initial name of your token. Additionally, you can examine the initial balance of the address you passed as an argument for deployment using the `constructor-args` flag. To check the initial balance, execute the following command:
+
+```
+zksync-era-cli --l2-port 3050 call 
+--contract <address> 
+--function "balanceOf(address)" 
+--args "0xb51473Db0e8e001fA0Ccbd5B80CEc36BEF3d4306" 
+--output-types uint256 
+--private-key 0x27593fea79697e947890ecbecce7901b0008345e5d7259710d0dd5e500d040be 
+--chain-id 270
+```
+
+The output will look like this:
+
+```
+INFO: UINT256(1000000)
+```
+
+This indicates the initial balance of the specified address: 1,000,000 tokens.
+
+There's another function to transfer some of the tokens to another address, in order to do that we will send a transaction calling that function.
+
+```
+zksync-era-cli --l2-port 3050 send 
+--contract <address> 
+--function "transfer(address, uint256)" 
+--args <to_address> 200 
+--output-types bool 
+--private-key 0x27593fea79697e947890ecbecce7901b0008345e5d7259710d0dd5e500d040be 
+--chain-id 270
+```
+
+Where the `to_address` would be the receiver address.
+The output should look like the following:
+
+```
+INFO: `0x...`
+```
+
+Representing the hash of the executed transaction.
