@@ -28,4 +28,4 @@ runcmd:
   - sudo apt install postgresql -y
   - sudo -u postgres psql -c "ALTER USER postgres WITH PASSWORD 'postgres';"
   - git clone https://github.com/matter-labs/block-explorer.git /root/block-explorer
-  - cd /root/block-explorer && npm install && mv packages/worker/.env.example packages/worker/.env && mv packages/api/.env.example packages/api/.env && npm run db:create && npm run dev
+  - cd /root/block-explorer && npm install && awk '{sub("BLOCKCHAIN_RPC_URL=http://localhost:3050", "BLOCKCHAIN_RPC_URL=http://10.0.1.3:3050")}1' packages/worker/.env.example > packages/worker/.env && awk '{sub("CONTRACT_VERIFICATION_API_URL=http://127.0.0.1:3070", "CONTRACT_VERIFICATION_API_URL=http://10.0.1.3:3070")}1' packages/api/.env.example > packages/api/.env && npm run db:create && npm run dev
