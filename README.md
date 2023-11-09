@@ -71,9 +71,9 @@ Other Docker containers are running Grafana and Prometheus, tools for monitoring
 
 To begin testing the local nodes and interacting with them, this repository offers a basic `ERC20` contract for your use.
 
-To deploy the contract and call its functions, start by cloning the [zksync-era-cli](https://github.com/lambdaclass/zksync_era_cli) tool repository. This tool provides a range of useful commands, but for this example, you'll primarily use `deploy` and `call` commands.
+To deploy the contract and call its functions, start by cloning the [zksync-era-cli](https://github.com/lambdaclass/zksync_era_cli) tool repository. This tool provides a range of useful commands, but for this example, you'll primarily use `deploy`, `call` and `send` commands.
 
-In all the following examples, we'll rely on a specific private key: `0x27593fea79697e947890ecbecce7901b0008345e5d7259710d0dd5e500d040be`. This key belongs to one of the rich wallets deployed in the local node for testing purposes.
+In all the following examples, we'll rely on a specific private key: `0x27593fea79697e947890ecbecce7901b0008345e5d7259710d0dd5e500d040be`. This key belongs to one of the rich wallets deployed in the local node for testing purposes. The address derived from this private key is `0xb51473Db0e8e001fA0Ccbd5B80CEc36BEF3d4306`, we use it as argument for the constructor to initialize with a certain number of tokens. 
 
 Once the node is up and running, use the following command to deploy our `ERC20` contract, a standard token:
 
@@ -82,12 +82,12 @@ zksync-era-cli --l2-port 3050 deploy
 --project-root contracts/ 
 --contract contracts/ERC20.sol  
 --contract-name ERC20 
---constructor-args 0x639dE71cB7C7022594cCe2BBF6873746b117E5CF 
+--constructor-args 0xb51473Db0e8e001fA0Ccbd5B80CEc36BEF3d4306 
 --private-key 0x27593fea79697e947890ecbecce7901b0008345e5d7259710d0dd5e500d040be 
 --chain-id 270
 ```
 
-If the deployment is successful, you'll receive an output similar to this:
+If the deployment is successful, you'll receive the transaction receipt and an output similar to this:
 
 ```
 INFO: `0x...`
@@ -104,19 +104,20 @@ zksync-era-cli --l2-port 3050 call
 --chain-id 270
 ```
 
+Where the `address` corresponds to the address of the deployed `ERC20` contract.
 The output will look like this:
 
 ```
 INFO: String(`lambdacoin`)
 ```
 
-This is the initial name of your token. Additionally, you can examine the initial balance of the address you passed as an argument for deployment using the `constructor-args` flag. This address initializes with a certain number of tokens. To check the initial balance, execute the following command:
+This is the initial name of your token. Additionally, you can examine the initial balance of the address you passed as an argument for deployment using the `constructor-args` flag. To check the initial balance, execute the following command:
 
-```bash
+```
 zksync-era-cli --l2-port 3050 call 
 --contract <address> 
 --function "balanceOf(address)" 
---args "0x639dE71cB7C7022594cCe2BBF6873746b117E5CF" 
+--args "0xb51473Db0e8e001fA0Ccbd5B80CEc36BEF3d4306" 
 --output-types uint256 
 --private-key 0x27593fea79697e947890ecbecce7901b0008345e5d7259710d0dd5e500d040be 
 --chain-id 270
@@ -129,3 +130,24 @@ INFO: UINT256(1000000)
 ```
 
 This indicates the initial balance of the specified address: 1,000,000 tokens.
+
+There's another function to transfer some of the tokens to another address, in order to do that we will send a transaction calling that function.
+
+```
+zksync-era-cli --l2-port 3050 send 
+--contract <address> 
+--function "transfer(address, uint256)" 
+--args <to_address> 200 
+--output-types bool 
+--private-key 0x27593fea79697e947890ecbecce7901b0008345e5d7259710d0dd5e500d040be 
+--chain-id 270
+```
+
+Where the `to_address` would be the receiver address.
+The output should look like the following:
+
+```
+INFO: `0x...`
+```
+
+Representing the hash of the executed transaction.
