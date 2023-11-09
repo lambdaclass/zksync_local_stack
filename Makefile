@@ -1,9 +1,10 @@
 OS := $(shell uname -s)
-export ZKSYNC_HOME=$(shell pwd)/zksync-era
+ZKSYNC_HOME := $(shell pwd)/zksync-era
 
 deps:
 	@if [ "$(OS)" = "Darwin" ]; then \
-		brew install axel openssl postgresql tmux; \
+		brew install axel openssl postgresql tmux node@18; \
+		brew link node@18 --overwrite; \
 		curl -SL https://github.com/docker/compose/releases/download/v2.23.0/docker-compose-linux-x86_64 -o /usr/local/bin/docker-compose; \
 		curl -L https://github.com/matter-labs/zksolc-bin/releases/download/v1.3.16/zksolc-macosx-arm64-v1.3.16 --output zksolc; \
 		chmod a+x zksolc; \
@@ -26,6 +27,8 @@ deps:
 		mkdir -p $(HOME)/.config; \
 		mv solc $(HOME)/.config; \
 		mv zksolc $(HOME)/.config; \
+		npm i -g npm@9; \
+		npm install --global yarn; \
 	fi
 	@if [ ! -n "$(shell which cargo)" ]; then \
 		curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y; \
@@ -40,8 +43,6 @@ deps:
 	rm -rf block-explorer;
 	git clone https://github.com/matter-labs/block-explorer; \
 	cd ${ZKSYNC_HOME}; \
-	npm i -g npm@9; \
-	npm install --global yarn; \
 	yarn policies set-version 1.22.19; \
 	. $(HOME)/.cargo/env; \
 	./bin/zk; \
@@ -51,16 +52,16 @@ run:
 	. $(HOME)/.cargo/env; \
 	tmux kill-session -t zksync-server; \
 	tmux new -d -s zksync-server; \
-	tmux send-keys -t zksync-server "cd ${ZKSYNC_HOME}" Enter; \
+	tmux send-keys -t zksync-server "cd ${ZKSYNC_HOME} && export ZKSYNC_HOME=${ZKSYNC_HOME}" Enter; \
 	tmux send-keys -t zksync-server "./bin/zk up" Enter; \
 	tmux send-keys -t zksync-server "./bin/zk server" Enter; \
-	docker-compose up -d; \
 	tmux kill-session -t zksync-explorer; \
 	tmux new -d -s zksync-explorer; \
-	tmux send-keys -t zksync-explorer "cd block-explorer" Enter; \
+	tmux send-keys -t zksync-explorer "cd ${ZKSYNC_HOME}/../block-explorer && export ZKSYNC_HOME=${ZKSYNC_HOME}" Enter; \
 	tmux send-keys -t zksync-explorer "npm install" Enter; \
 	tmux send-keys -t zksync-explorer "echo dev | npm run hyperchain:configure" Enter; \
 	tmux send-keys -t zksync-explorer "npm run db:create" Enter; \
 	tmux send-keys -t zksync-explorer "npm run dev" Enter; \
-	tmux a -t zksync-explorer
+	tmux a -t zksync-server; \
+	docker-compose up -d; \
 
