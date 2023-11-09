@@ -23,7 +23,7 @@ The stack mainly consist of:
 - [L1 node inside Docker and L2 node](https://github.com/matter-labs/zksync-era)
 - [Block explorer](https://github.com/matter-labs/block-explorer#%EF%B8%8F-setting-up-env-variables)
 - Grafana and observability tools
-- Verifier with CPU and GPU support
+- [Prover with CPU and GPU support](https://github.com/matter-labs/zksync-era/tree/main/prover)
 
 ## Starting the stack
 
@@ -63,9 +63,14 @@ Additionally, you can access the API at `http:localhost/3020` and the worker at 
 
 Other Docker containers are running Grafana and Prometheus, tools for monitoring and creating dashboards. To access a helpful dashboard that provides information about every transaction executed by the node, open your web browser and visit `http://localhost:3000`. Once in that page, click on the hamburger menu on the top left of the screen, on the menu that will slide on, head on over to "Dashboards" to see the available dashboards. You can also use the python script `automate_transactions.py` to generate data.
 
-## Verifier
+## Prover
 
-**Work in Progress**
+When the stack is initiated, various binaries execute, each containing one of the tools involved in the process of block proof generation. For simplicity, the Prover runs in its CPU version. Here's a list of all the binaries and different components being executed, along with their corresponding `tmux` session since all these components take control of the terminal:
+
+- **Prover**: The main prover. The `tmux` session for this part is `zksync-prover`.
+- **Prover gateway**: Acts as a communication layer between the server running the state keeper and the proving subsystem. The `tmux` session for this part is `zksync-prover-gateway`.
+- **Witness generator**: Responsible for creating prover jobs. The `tmux` session for this part is `zksync-witness-generator`.
+- **Proof compressor**: The final step that compresses/wraps the FRI proof into a SNARK. The `tmux` session for this part is `zksync-block-compressor`.
 
 ## Deployment and Contract Interaction
 
