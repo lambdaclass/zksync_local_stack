@@ -84,4 +84,12 @@ run:
 	tmux send-keys -t zksync-prover-gateway "../bin/zk f cargo run --release --bin zksync_prover_fri_gateway" Enter; \
 
 	docker-compose up -d; \
-	tmux a -t zksync-server; \
+	tmux kill-session -t zksync-explorer; \
+	tmux new -d -s zksync-explorer; \
+	tmux send-keys -t zksync-explorer "cd block-explorer" Enter; \
+	tmux send-keys -t zksync-explorer "npm install" Enter; \
+	tmux send-keys -t zksync-explorer "npm run dev hyperchain:configure" Enter; \
+	tmux send-keys -t zksync-explorer "npm run db:create" Enter; \
+	tmux send-keys -t zksync-explorer "npm run dev" Enter; \
+	tmux a -t zksync-explorer
+
