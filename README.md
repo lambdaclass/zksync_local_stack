@@ -61,7 +61,7 @@ Additionally, you can access the API at `http:localhost/3020` and the worker at 
 
 ## Grafana and Observability
 
-Other Docker containers are running Grafana and Prometheus, tools for monitoring and creating dashboards. To access a helpful dashboard that provides information about every transaction executed by the node, open your web browser and visit `http://localhost:3000`.
+Other Docker containers are running Grafana and Prometheus, tools for monitoring and creating dashboards. To access a helpful dashboard that provides information about every transaction executed by the node, open your web browser and visit `http://localhost:3000`. Once in that page, click on the hamburger menu on the top left of the screen, on the menu that will slide on, head on over to "Dashboards" to see the available dashboards. You can also use the python script `automate_transactions.py` to generate data.
 
 ## Verifier
 
