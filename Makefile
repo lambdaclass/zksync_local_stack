@@ -65,3 +65,9 @@ run:
 	tmux a -t zksync-server; \
 	docker-compose up -d; \
 
+clean:
+	rm -rf zksync-era
+	rm -rf block-explorer
+	tmux kill-server || (echo "No tmux sessions"; exit 0)
+	./scripts/delete_containers.sh
+
