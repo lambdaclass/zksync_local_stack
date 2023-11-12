@@ -65,7 +65,7 @@ run:
 	tmux send-keys -t zksync-witness-generator "API_PROMETHEUS_LISTENER_PORT=3116 ../bin/zk f cargo run --release --bin zksync_witness_generator -- --all_rounds" Enter; \
 	tmux kill-session -t zksync-prover; \
 	tmux new -d -s zksync-prover; \
-	tmux send-keys -t zksync-prover "cd ${ZKSYNC_HOME}/prover" Enter && export ZKSYNC_HOME=${ZKSYNC_HOME}; \
+	tmux send-keys -t zksync-prover "cd ${ZKSYNC_HOME}/prover && export ZKSYNC_HOME=${ZKSYNC_HOME}" Enter; \
 	tmux send-keys -t zksync-prover "../bin/zk f cargo run --release --bin zksync_prover_fri" Enter; \
 	tmux kill-session -t zksync-proof-compressor; \
 	tmux new -d -s zksync-proof-compressor; \
