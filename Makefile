@@ -41,12 +41,20 @@ deps:
 	git clone -b boojum-integration https://github.com/matter-labs/zksync-era; \
 	git clone https://github.com/matter-labs/block-explorer; \
 	cd ${ZKSYNC_HOME}; \
+	git remote add lambdaclass https://github.com/lambdaclass/zksync-era; \
+	git fetch lambdaclass; \
+	@if [ "$(VALIDIUM)" = "true" ]; then \
+		git fetch lambdaclass; \
+		git checkout lambdaclass/validium; \
+	fi
 	yarn policies set-version 1.22.19; \
 	. $(HOME)/.cargo/env; \
 	zk; \
-	zk init; \
-	git remote add lambdaclass https://github.com/lambdaclass/zksync-era; \
-	git fetch lambdaclass; \
+	@if [ "$(VALIDIUM)" = "true" ]; then \
+		zk init --validium; \
+	else \
+		zk init; \
+	fi
 	git checkout lambdaclass/fix_witness_generator_for_boojum prover/setup.sh prover/witness_generator/src/main.rs; \
 	rustup install nightly-2023-07-21; \
 
