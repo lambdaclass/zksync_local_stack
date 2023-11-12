@@ -6,7 +6,6 @@ deps:
 	@if [ "$(OS)" = "Darwin" ]; then \
 		brew install axel openssl postgresql tmux node@18; \
 		brew link node@18 --overwrite; \
-		curl -SL https://github.com/docker/compose/releases/download/v2.23.0/docker-compose-linux-x86_64 -o /usr/local/bin/docker-compose; \
 		curl -L https://github.com/matter-labs/zksolc-bin/releases/download/v1.3.16/zksolc-macosx-arm64-v1.3.16 --output zksolc; \
 		chmod a+x zksolc; \
 		curl -L https://github.com/ethereum/solidity/releases/download/v0.8.19/solc-macos --output solc; \
