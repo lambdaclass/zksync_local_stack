@@ -38,9 +38,7 @@ deps:
 	@if [ "$(OS)" = "Linux" ]; then \
 		sudo service postgresql stop; \
 	fi
-	rm -rf zksync-era; \
 	git clone -b boojum-integration https://github.com/matter-labs/zksync-era; \
-	rm -rf block-explorer;
 	git clone https://github.com/matter-labs/block-explorer; \
 	cd ${ZKSYNC_HOME}; \
 	yarn policies set-version 1.22.19; \
