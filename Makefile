@@ -86,6 +86,9 @@ run:
 	tmux a -t zksync-server; \
 	docker-compose up -d; \
 
+make prover_status:
+	ZKSYNC_HOME=$(shell pwd)/zksync-era && zk status prover
+
 clean:
 	rm -rf zksync-era
 	rm -rf block-explorer
