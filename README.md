@@ -27,7 +27,7 @@ The stack mainly consist of:
 
 ## Starting the stack
 
-**Please note that Docker is required to run the following commands.**
+**Please note that Docker and Docker-Compose are required to run the following commands.**
 
 To get started, we need to install all the essential dependencies. You can achieve this by running the following command:
 
@@ -134,7 +134,7 @@ The output will look like this:
 INFO: UINT256(1000000)
 ```
 
-This indicates the initial balance of the specified address: 1,000,000 tokens.
+This indicates the initial balavnce of the specified address: 1,000,000 tokens.
 
 There's another function to transfer some of the tokens to another address, in order to do that we will send a transaction calling that function.
 
