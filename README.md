@@ -20,9 +20,9 @@ flowchart LR
 ZKSync full stack covers a set of tools designed facilitate the interaction with the complete development cycle in the zkSync Layer-2 blockchain.
 
 The stack mainly consist of:
-- [L1 node inside Docker and L2 node](https://github.com/matter-labs/zksync-era)
+- [Dockerized L1 node and a zkSync L2 node](https://github.com/matter-labs/zksync-era)
 - [Block explorer](https://github.com/matter-labs/block-explorer#%EF%B8%8F-setting-up-env-variables)
-- Grafana and observability tools
+- Prometheus + Grafana setup for observability.
 - [Prover with CPU and GPU support](https://github.com/matter-labs/zksync-era/tree/main/prover)
 
 ## Starting the stack
@@ -44,6 +44,23 @@ make run
 ```
 
 This command will launch all the components of the ZKSync full stack, allowing you to dive into the development environment quickly.
+
+## Requirements
+
+### CPU Prover Setup
+
+- A CPU with at least 8 physical cores.
+- 50 GB of RAM.
+- 400 GB of free disk space.
+
+### GPU Prover Setup
+
+- A CPU with at least 8 physical cores.
+- 16 GB of RAM.
+- 30 GB of free disk space.
+- An Nvidia L4/T4 GPU with 16GB of RAM
+
+The non-prover should run on any decent modern machine.
 
 ## Local Nodes
 
