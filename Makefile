@@ -39,9 +39,7 @@ deps:
 	@if [ "$(OS)" = "Linux" ]; then \
 		sudo service postgresql stop; \
 	fi
-	rm -rf zksync-era; \
 	git clone -b boojum-integration https://github.com/matter-labs/zksync-era; \
-	rm -rf block-explorer;
 	git clone https://github.com/matter-labs/block-explorer; \
 	cd ${ZKSYNC_HOME}; \
 	yarn policies set-version 1.22.19; \
@@ -88,4 +86,10 @@ run:
 	tmux send-keys -t zksync-explorer "npm run dev" Enter; \
 	tmux a -t zksync-server; \
 	docker-compose up -d; \
+
+clean:
+	rm -rf zksync-era
+	rm -rf block-explorer
+	tmux kill-server || (echo "No tmux sessions"; exit 0)
+	./scripts/delete_containers.sh
 
