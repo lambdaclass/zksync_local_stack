@@ -50,7 +50,7 @@ deps:
 	zk init; \
 	git remote add lambdaclass https://github.com/lambdaclass/zksync-era; \
 	git fetch lambdaclass; \
-	git checkout lambdaclass/improve-prover-setup prover/setup.sh prover/witness_generator/src/main.rs; \
+	git checkout lambdaclass/fix_witness_generator_for_boojum prover/setup.sh prover/witness_generator/src/main.rs; \
 	rustup install nightly-2023-07-21; \
 
 run:
