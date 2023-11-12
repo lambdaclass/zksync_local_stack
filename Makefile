@@ -1,5 +1,6 @@
 OS := $(shell uname -s)
-ZKSYNC_HOME := $(shell pwd)/zksync-era
+export ZKSYNC_HOME=$(shell pwd)/zksync-era
+export PATH:=$(ZKSYNC_HOME)/bin:$(PATH)
 
 deps:
 	@if [ "$(OS)" = "Darwin" ]; then \
@@ -45,16 +46,39 @@ deps:
 	cd ${ZKSYNC_HOME}; \
 	yarn policies set-version 1.22.19; \
 	. $(HOME)/.cargo/env; \
-	./bin/zk; \
-	./bin/zk init
+	zk; \
+	zk init; \
+	git remote add lambdaclass https://github.com/lambdaclass/zksync-era; \
+	git fetch lambdaclass; \
+	git checkout lambdaclass/improve-prover-setup prover/setup.sh prover/witness_generator/src/main.rs; \
+	rustup install nightly-2023-07-21; \
 
 run:
 	. $(HOME)/.cargo/env; \
+	cd ${ZKSYNC_HOME}/prover; \
+	./setup.sh; \
 	tmux kill-session -t zksync-server; \
 	tmux new -d -s zksync-server; \
 	tmux send-keys -t zksync-server "cd ${ZKSYNC_HOME} && export ZKSYNC_HOME=${ZKSYNC_HOME}" Enter; \
 	tmux send-keys -t zksync-server "./bin/zk up" Enter; \
-	tmux send-keys -t zksync-server "./bin/zk server" Enter; \
+	tmux send-keys -t zksync-server "./bin/zk server --components=api,eth,tree,state_keeper,housekeeper,proof_data_handler" Enter; \
+	tmux kill-session -t zksync-witness-generator; \
+	tmux new -d -s zksync-witness-generator; \
+	tmux send-keys -t zksync-witness-generator "cd ${ZKSYNC_HOME}/prover && export ZKSYNC_HOME=${ZKSYNC_HOME}" Enter; \
+	tmux send-keys -t zksync-witness-generator "API_PROMETHEUS_LISTENER_PORT=3116 ../bin/zk f cargo run --release --bin zksync_witness_generator -- --all_rounds" Enter; \
+	tmux kill-session -t zksync-prover; \
+	tmux new -d -s zksync-prover; \
+	tmux send-keys -t zksync-prover "cd ${ZKSYNC_HOME}/prover" Enter && export ZKSYNC_HOME=${ZKSYNC_HOME}; \
+	tmux send-keys -t zksync-prover "../bin/zk f cargo run --release --bin zksync_prover_fri" Enter; \
+	tmux kill-session -t zksync-proof-compressor; \
+	tmux new -d -s zksync-proof-compressor; \
+	tmux send-keys -t zksync-proof-compressor "cd ${ZKSYNC_HOME}/prover && export ZKSYNC_HOME=${ZKSYNC_HOME}" Enter; \
+	tmux send-keys -t zksync-proof-compressor "../bin/zk f cargo run --release --bin zksync_proof_fri_compressor" Enter; \
+	tmux kill-session -t zksync-prover-gateway; \
+	tmux new -d -s zksync-prover-gateway; \
+	tmux send-keys -t zksync-prover-gateway "cd ${ZKSYNC_HOME}/prover && export ZKSYNC_HOME=${ZKSYNC_HOME}" Enter; \
+	tmux send-keys -t zksync-prover-gateway "../bin/zk f cargo run --release --bin zksync_prover_fri_gateway" Enter; \
+	docker-compose up -d; \
 	tmux kill-session -t zksync-explorer; \
 	tmux new -d -s zksync-explorer; \
 	tmux send-keys -t zksync-explorer "cd ${ZKSYNC_HOME}/../block-explorer && export ZKSYNC_HOME=${ZKSYNC_HOME}" Enter; \
