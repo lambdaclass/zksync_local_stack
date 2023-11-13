@@ -17,12 +17,12 @@ flowchart LR
     E --> |Compressed block| B
 ```
 
-ZKSync full stack covers a set of tools designed facilitate the interaction with the complete development cycle in the zkSync Layer-2 blockchain.
+The `zkSync` stack covers a set of tools designed to facilitate the interaction with the complete development cycle on the zkSync Layer-2 blockchain.
 
-The stack mainly consist of:
+The stack consists of:
 - [Dockerized L1 node and a zkSync L2 node](https://github.com/matter-labs/zksync-era)
 - [Block explorer](https://github.com/matter-labs/block-explorer#%EF%B8%8F-setting-up-env-variables)
-- Prometheus + Grafana setup for observability.
+- A Prometheus + Grafana setup for observability.
 - [Prover with CPU and GPU support](https://github.com/matter-labs/zksync-era/tree/main/prover)
 
 ## Starting the stack
@@ -43,7 +43,7 @@ Once all the dependencies are successfully installed, you can initiate the entir
 make run
 ```
 
-This command will launch all the components of the ZKSync full stack except the prover, allowing you to dive into the development environment quickly.
+This will launch all the components of the ZKSync full stack except the prover, allowing you to dive into the development environment quickly.
 
 To run it with the CPU prover as well, run
 
@@ -72,7 +72,7 @@ The non-prover should run on any decent modern machine.
 
 ## Local Nodes
 
-The mentioned command facilitates the creation of essential Docker containers for your development environment. This includes setting up a PostgreSQL database and the L1 local Geth node. Moreover, it compiles and deploys all the necessary contracts for the L2 local node to function. Please note that this process may take a moment to complete.
+The mentioned command facilitates the creation of essential Docker containers for your development environment. This includes setting up a `PostgreSQL` database and the L1 local Geth node. Moreover, it compiles and deploys all the necessary contracts for the L2 local node to function. Please note that this process may take a moment to complete.
 
 In this context, it's essential to mention that many of the tools used will take control of the terminal. Therefore, we've installed `tmux` in the previous step to manage different commands and sessions for each tool. For the L2 node, the session is named `zksync-server`. To view the logs and observe the server in action, you can use the following command: `tmux a -t zksync-server`.
 
@@ -90,7 +90,7 @@ Other Docker containers are running Grafana and Prometheus, tools for monitoring
 
 ## Prover
 
-When the stack is initiated, various binaries execute, each containing one of the tools involved in the process of block proof generation. For simplicity, the Prover runs in its CPU version. Here's a list of all the binaries and different components being executed, along with their corresponding `tmux` session since all these components take control of the terminal:
+When the stack is initiated in prover mode, various binaries execute, each containing one of the tools involved in the process of block proof generation. Here's a list of all the binaries and different components being executed, along with their corresponding `tmux` session since all these components take control of the terminal:
 
 - **Prover**: The main prover. The `tmux` session for this part is `zksync-prover`.
 - **Prover gateway**: Acts as a communication layer between the server running the state keeper and the proving subsystem. The `tmux` session for this part is `zksync-prover-gateway`.
