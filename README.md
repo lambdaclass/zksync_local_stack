@@ -43,7 +43,15 @@ Once all the dependencies are successfully installed, you can initiate the entir
 make run
 ```
 
-This command will launch all the components of the ZKSync full stack, allowing you to dive into the development environment quickly.
+This command will launch all the components of the ZKSync full stack except the prover, allowing you to dive into the development environment quickly.
+
+To run it with the CPU prover as well, run
+
+```bash
+make run PROVER=cpu
+```
+
+instead. See the requirements section below to check if you meet the requirements to run in prover mode.
 
 ## Requirements
 
@@ -173,3 +181,15 @@ INFO: `0x...`
 ```
 
 Representing the hash of the executed transaction.
+
+## Validium Mode
+
+Disclaimer: this feature is still in early development, expect bugs and missing features.
+
+The stack can be run in `Validium mode`. In this mode, data availability is pushed to the L2, which means state diffs are not stored on the L1 anymore. To run the stack in validium mode, pass the `VALIDIUM` flag as `true` to the `deps` target, like so:
+
+```bash
+make deps VALIDIUM=true
+```
+
+You can find more info on validium mode [here](https://github.com/matter-labs/zksync-era/pull/459).
