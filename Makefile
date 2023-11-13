@@ -1,4 +1,5 @@
 OS := $(shell uname -s)
+VALIDIUM ?= false
 export ZKSYNC_HOME=$(shell pwd)/zksync-era
 export PATH:=$(ZKSYNC_HOME)/bin:$(PATH)
 
@@ -42,14 +43,13 @@ deps:
 	git clone https://github.com/matter-labs/block-explorer; \
 	cd ${ZKSYNC_HOME}; \
 	git remote add lambdaclass https://github.com/lambdaclass/zksync-era; \
-	git fetch lambdaclass; \
+	git fetch lambdaclass;
 	@if [ "$(VALIDIUM)" = "true" ]; then \
-		git fetch lambdaclass; \
 		git checkout lambdaclass/validium; \
 	fi
 	yarn policies set-version 1.22.19; \
 	. $(HOME)/.cargo/env; \
-	zk; \
+	zk;
 	@if [ "$(VALIDIUM)" = "true" ]; then \
 		zk init --validium; \
 	else \
