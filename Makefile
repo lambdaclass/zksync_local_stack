@@ -43,7 +43,7 @@ deps:
 	git clone https://github.com/matter-labs/block-explorer; \
 	cd ${ZKSYNC_HOME}; \
 	git remote add lambdaclass https://github.com/lambdaclass/zksync-era; \
-	git fetch lambdaclass;
+	git fetch lambdaclass; \
 	@if [ "$(VALIDIUM)" = "true" ]; then \
 		git checkout lambdaclass/validium; \
 	fi
