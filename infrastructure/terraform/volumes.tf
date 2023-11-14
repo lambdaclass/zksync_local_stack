@@ -12,6 +12,13 @@ resource "hcloud_volume" "explorer_volume" {
   format   = "xfs"
 }
 
+resource "hcloud_volume" "prometheus_grafana" {
+  name     = "zk-prometheus-grafana-volume"
+  size     = var.disk_size
+  location = var.location
+  format   = "xfs"
+}
+
 resource "hcloud_volume_attachment" "server_vol_attachment" {
   volume_id = hcloud_volume.server_volume.id
   server_id = hcloud_server.server.id
