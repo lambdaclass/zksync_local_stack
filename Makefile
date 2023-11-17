@@ -15,7 +15,7 @@ deps:
 		mv solc $(HOME)/Library/Application\ Support/eth-compilers; \
 		mv zksolc $(HOME)/Library/Application\ Support/eth-compilers; \
 	else \
-		curl -s https://raw.githubusercontent.com/nodesource/distributions/master/scripts/nsolid_setup_deb.sh | sh -s "18"; \
+		curl -s https://raw.githubusercontent.com/nodesource/distributions/master/scripts/nsolid_setup_deb.sh | sudo sh -s "18"; \
 		sudo apt update; \
 		sudo apt install -y axel libssl-dev nsolid postgresql tmux git build-essential pkg-config cmake clang lldb lld; \
 		curl -fsSL https://get.docker.com | sh; \
@@ -25,9 +25,9 @@ deps:
 		chmod a+x solc; \
 		chmod a+x /usr/local/bin/docker-compose; \
 		chmod a+x zksolc; \
-		mkdir -p $(HOME)/.config; \
-		mv solc $(HOME)/.config; \
-		mv zksolc $(HOME)/.config; \
+		mkdir -p $(HOME)/.config/eth-compilers; \
+		mv solc $(HOME)/.config/eth-compilers; \
+		mv zksolc $(HOME)/.config/eth-compilers; \
 		npm i -g npm@9; \
 		npm install --global yarn; \
 	fi
@@ -95,7 +95,7 @@ run:
 	tmux a -t zksync-server; \
 	docker-compose up -d; \
 
-make prover_status:
+prover_status:
 	ZKSYNC_HOME=$(shell pwd)/zksync-era && zk status prover
 
 down:
