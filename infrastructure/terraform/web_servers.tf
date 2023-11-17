@@ -23,7 +23,7 @@ resource "hcloud_server" "explorer" {
 }
 
 resource "hcloud_server" "prometheus_grafana" {
-  name        = "zksync-prometheus-grafana"
+  name        = "zksync-prometheus"
   image       = var.os_type
   server_type = var.server_type
   location    = var.location

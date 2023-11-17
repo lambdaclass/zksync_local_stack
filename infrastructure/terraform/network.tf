@@ -22,7 +22,6 @@ resource "hcloud_server_network" "prometheus_grafana" {
   ip		= "10.0.1.4"
 }
 
-
 resource "hcloud_network_subnet" "hc_private_subnet" {
   network_id   = hcloud_network.hc_private.id
   type         = "cloud"
