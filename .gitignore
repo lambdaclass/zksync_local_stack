@@ -2,3 +2,10 @@
 .yarnrc
 block-explorer
 zksync-era
+infrastructure/terraform/terraform.tfvars
+.vscode/
+infrastructure/terraform/.terraform.lock.hcl
+infrastructure/terraform/.terraform/
+infrastructure/terraform/terraform.tfstate
+infrastructure/terraform/terraform.tfstate.backup
+target/
