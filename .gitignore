@@ -1,3 +1,7 @@
+.yarn
+.yarnrc
+block-explorer
+zksync-era
 infrastructure/terraform/terraform.tfvars
 .vscode/
 infrastructure/terraform/.terraform.lock.hcl

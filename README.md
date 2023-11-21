@@ -108,12 +108,12 @@ In all the following examples, we'll rely on a specific private key: `0x27593fea
 Once the node is up and running, use the following command to deploy our `ERC20` contract, a standard token:
 
 ```bash
-zksync-era-cli --l2-port 3050 deploy 
---project-root contracts/ 
---contract contracts/ERC20.sol  
---contract-name ERC20 
---constructor-args 0xb51473Db0e8e001fA0Ccbd5B80CEc36BEF3d4306 
---private-key 0x27593fea79697e947890ecbecce7901b0008345e5d7259710d0dd5e500d040be 
+zksync-era-cli --l2-port 3050 deploy \
+--project-root contracts/ \
+--contract contracts/ERC20.sol \
+--contract-name ERC20 \
+--constructor-args 0xb51473Db0e8e001fA0Ccbd5B80CEc36BEF3d4306 \
+--private-key 0x27593fea79697e947890ecbecce7901b0008345e5d7259710d0dd5e500d040be \
 --chain-id 270
 ```
 
@@ -125,12 +125,11 @@ INFO: `0x...`
 
 This address represents where the contract is now deployed. After deploying the contract, you can interact with it in various ways. For instance, you can retrieve the name of the deployed token by calling the following function:
 
-```
-zksync-era-cli --l2-port 3050 call 
---contract <address> 
---function "name()" 
---output-types string 
---private-key 0x27593fea79697e947890ecbecce7901b0008345e5d7259710d0dd5e500d040be 
+```bash
+zksync-era-cli --l2-port 3050 call \
+--contract <address> \
+--function "name()" \
+--output-types string \
 --chain-id 270
 ```
 
@@ -143,13 +142,12 @@ INFO: String(`lambdacoin`)
 
 This is the initial name of your token. Additionally, you can examine the initial balance of the address you passed as an argument for deployment using the `constructor-args` flag. To check the initial balance, execute the following command:
 
-```
-zksync-era-cli --l2-port 3050 call 
---contract <address> 
---function "balanceOf(address)" 
---args "0xb51473Db0e8e001fA0Ccbd5B80CEc36BEF3d4306" 
---output-types uint256 
---private-key 0x27593fea79697e947890ecbecce7901b0008345e5d7259710d0dd5e500d040be 
+```bash
+zksync-era-cli --l2-port 3050 call \
+--contract <address> \
+--function "balanceOf(address)" \
+--args "0xb51473Db0e8e001fA0Ccbd5B80CEc36BEF3d4306" \
+--output-types uint256 \
 --chain-id 270
 ```
 
@@ -163,13 +161,13 @@ This indicates the initial balavnce of the specified address: 1,000,000 tokens.
 
 There's another function to transfer some of the tokens to another address, in order to do that we will send a transaction calling that function.
 
-```
-zksync-era-cli --l2-port 3050 send 
---contract <address> 
---function "transfer(address, uint256)" 
---args <to_address> 200 
---output-types bool 
---private-key 0x27593fea79697e947890ecbecce7901b0008345e5d7259710d0dd5e500d040be 
+```bash
+zksync-era-cli --l2-port 3050 send \
+--contract <address> \
+--function "transfer(address, uint256)" \
+--args <to_address> 200 \
+--output-types bool \
+--private-key 0x27593fea79697e947890ecbecce7901b0008345e5d7259710d0dd5e500d040be \
 --chain-id 270
 ```
 
