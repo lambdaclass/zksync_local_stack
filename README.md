@@ -103,7 +103,7 @@ To begin testing the local nodes and interacting with them, this repository offe
 
 To deploy the contract and call its functions, start by cloning the [zksync-era-cli](https://github.com/lambdaclass/zksync_era_cli) tool repository. This tool provides a range of useful commands, but for this example, you'll primarily use `deploy`, `call` and `send` commands.
 
-In all the following examples, we'll rely on a specific private key: `0x27593fea79697e947890ecbecce7901b0008345e5d7259710d0dd5e500d040be`. This key belongs to one of the rich wallets deployed in the local node for testing purposes. The address derived from this private key is `0xb51473Db0e8e001fA0Ccbd5B80CEc36BEF3d4306`, we use it as argument for the constructor to initialize with a certain number of tokens. 
+In all the following examples, we'll rely on a specific private key: `0x27593fea79697e947890ecbecce7901b0008345e5d7259710d0dd5e500d040be`. This key belongs to one of the rich wallets deployed in the local node for testing purposes. The address derived from this private key is `0xde03a0b5963f75f1c8485b355ff6d30f3093bde7`, we use it as argument for the constructor to initialize with a certain number of tokens. 
 
 Once the node is up and running, use the following command to deploy our `ERC20` contract, a standard token:
 
@@ -112,7 +112,7 @@ zksync-era-cli --l2-port 3050 deploy \
 --project-root contracts/ \
 --contract contracts/ERC20.sol \
 --contract-name ERC20 \
---constructor-args 0xb51473Db0e8e001fA0Ccbd5B80CEc36BEF3d4306 \
+--constructor-args 0xde03a0b5963f75f1c8485b355ff6d30f3093bde7 \
 --private-key 0x27593fea79697e947890ecbecce7901b0008345e5d7259710d0dd5e500d040be \
 --chain-id 270
 ```
@@ -146,7 +146,7 @@ This is the initial name of your token. Additionally, you can examine the initia
 zksync-era-cli --l2-port 3050 call \
 --contract <address> \
 --function "balanceOf(address)" \
---args "0xb51473Db0e8e001fA0Ccbd5B80CEc36BEF3d4306" \
+--args "0xde03a0b5963f75f1c8485b355ff6d30f3093bde7" \
 --output-types uint256 \
 --chain-id 270
 ```
