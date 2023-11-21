@@ -58,6 +58,18 @@ deps:
 	git checkout lambdaclass/fix_witness_generator_for_boojum prover/setup.sh prover/witness_generator/src/main.rs; \
 	rustup install nightly-2023-07-21; \
 
+terra-init:
+	terraform -chdir=infrastructure/terraform init
+
+terra-plan:
+	terraform -chdir=infrastructure/terraform plan
+
+terra-apply:
+	terraform -chdir=infrastructure/terraform apply 
+
+terra-destroy:
+	terraform -chdir=infrastructure/terraform destroy 
+
 run:
 	. $(HOME)/.cargo/env; \
 	tmux kill-session -t zksync-server; \

@@ -1,0 +1,30 @@
+#cloud-config
+users:
+  - name: root
+    groups: users, admin
+    sudo: ALL=(ALL) NOPASSWD:ALL
+    shell: /bin/bash
+    ssh_authorized_keys:
+package_upgrade: true
+packages:
+      - ca-certificates
+      - curl
+      - gnupg
+      - vim
+      - git
+      - zip
+      - unzip
+      - openssl
+      - libssl-dev
+      - build-essential
+      - libclang-dev
+runcmd:
+  - apt-get install pkg-config cmake clang lldb lld -y
+  - wget -P /root/ https://nodejs.org/dist/v18.18.0/node-v18.18.0-linux-x64.tar.xz
+  - tar -xf /root/node-v18.18.0-linux-x64.tar.xz --directory=/usr/local/ --strip-components=1
+  - rm /root/node-v18.18.0-linux-x64.tar.xz
+  - npm install --global yarn
+  - sudo apt install postgresql -y
+  - sudo -u postgres psql -c "ALTER USER postgres WITH PASSWORD 'postgres';"
+  - git clone https://github.com/matter-labs/block-explorer.git /root/block-explorer
+  - cd /root/block-explorer && npm install && awk '{sub("BLOCKCHAIN_RPC_URL=http://localhost:3050", "BLOCKCHAIN_RPC_URL=http://10.0.1.3:3050")}1' packages/worker/.env.example > packages/worker/.env && awk '{sub("CONTRACT_VERIFICATION_API_URL=http://127.0.0.1:3070", "CONTRACT_VERIFICATION_API_URL=http://10.0.1.3:3070")}1' packages/api/.env.example > packages/api/.env && npm run db:create && npm run dev
