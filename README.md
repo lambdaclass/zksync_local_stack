@@ -17,17 +17,17 @@ flowchart LR
     E --> |Compressed block| B
 ```
 
-ZKSync full stack covers a set of tools designed facilitate the interaction with the complete development cycle in the zkSync Layer-2 blockchain.
+The `zkSync` stack covers a set of tools designed to facilitate the interaction with the complete development cycle on the zkSync Layer-2 blockchain.
 
-The stack mainly consist of:
-- [L1 node inside Docker and L2 node](https://github.com/matter-labs/zksync-era)
+The stack consists of:
+- [Dockerized L1 node and a zkSync L2 node](https://github.com/matter-labs/zksync-era)
 - [Block explorer](https://github.com/matter-labs/block-explorer#%EF%B8%8F-setting-up-env-variables)
-- Grafana and observability tools
-- Verifier with CPU and GPU support
+- A Prometheus + Grafana setup for observability.
+- [Prover with CPU and GPU support](https://github.com/matter-labs/zksync-era/tree/main/prover)
 
 ## Starting the stack
 
-**Please note that Docker is required to run the following commands.**
+**Please note that Docker and Docker-Compose are required to run the following commands.**
 
 To get started, we need to install all the essential dependencies. You can achieve this by running the following command:
 
@@ -43,11 +43,36 @@ Once all the dependencies are successfully installed, you can initiate the entir
 make run
 ```
 
-This command will launch all the components of the ZKSync full stack, allowing you to dive into the development environment quickly.
+This will launch all the components of the ZKSync full stack except the prover, allowing you to dive into the development environment quickly.
+
+To run it with the CPU prover as well, run
+
+```bash
+make run PROVER=cpu
+```
+
+instead. See the requirements section below to check if you meet the requirements to run in prover mode.
+
+## Requirements
+
+### CPU Prover Setup
+
+- A CPU with at least 8 physical cores.
+- 50 GB of RAM.
+- 400 GB of free disk space.
+
+### GPU Prover Setup
+
+- A CPU with at least 8 physical cores.
+- 16 GB of RAM.
+- 30 GB of free disk space.
+- An Nvidia L4/T4 GPU with 16GB of RAM
+
+The non-prover should run on any decent modern machine.
 
 ## Local Nodes
 
-The mentioned command facilitates the creation of essential Docker containers for your development environment. This includes setting up a PostgreSQL database and the L1 local Geth node. Moreover, it compiles and deploys all the necessary contracts for the L2 local node to function. Please note that this process may take a moment to complete.
+The mentioned command facilitates the creation of essential Docker containers for your development environment. This includes setting up a `PostgreSQL` database and the L1 local Geth node. Moreover, it compiles and deploys all the necessary contracts for the L2 local node to function. Please note that this process may take a moment to complete.
 
 In this context, it's essential to mention that many of the tools used will take control of the terminal. Therefore, we've installed `tmux` in the previous step to manage different commands and sessions for each tool. For the L2 node, the session is named `zksync-server`. To view the logs and observe the server in action, you can use the following command: `tmux a -t zksync-server`.
 
@@ -61,11 +86,16 @@ Additionally, you can access the API at `http:localhost/3020` and the worker at 
 
 ## Grafana and Observability
 
-Other Docker containers are running Grafana and Prometheus, tools for monitoring and creating dashboards. To access a helpful dashboard that provides information about every transaction executed by the node, open your web browser and visit `http://localhost:3000`.
+Other Docker containers are running Grafana and Prometheus, tools for monitoring and creating dashboards. To access a helpful dashboard that provides information about every transaction executed by the node, open your web browser and visit `http://localhost:3000`. Once in that page, click on the hamburger menu on the top left of the screen, on the menu that will slide on, head on over to "Dashboards" to see the available dashboards. You can also use the python script `automate_transactions.py` to generate data.
 
-## Verifier
+## Prover
 
-**Work in Progress**
+When the stack is initiated in prover mode, various binaries execute, each containing one of the tools involved in the process of block proof generation. Here's a list of all the binaries and different components being executed, along with their corresponding `tmux` session since all these components take control of the terminal:
+
+- **Prover**: The main prover. The `tmux` session for this part is `zksync-prover`.
+- **Prover gateway**: Acts as a communication layer between the server running the state keeper and the proving subsystem. The `tmux` session for this part is `zksync-prover-gateway`.
+- **Witness generator**: Responsible for creating prover jobs. The `tmux` session for this part is `zksync-witness-generator`.
+- **Proof compressor**: The final step that compresses/wraps the FRI proof into a SNARK. The `tmux` session for this part is `zksync-block-compressor`.
 
 ## Deployment and Contract Interaction
 
@@ -129,7 +159,7 @@ The output will look like this:
 INFO: UINT256(1000000)
 ```
 
-This indicates the initial balance of the specified address: 1,000,000 tokens.
+This indicates the initial balavnce of the specified address: 1,000,000 tokens.
 
 There's another function to transfer some of the tokens to another address, in order to do that we will send a transaction calling that function.
 
@@ -151,3 +181,15 @@ INFO: `0x...`
 ```
 
 Representing the hash of the executed transaction.
+
+## Validium Mode
+
+Disclaimer: this feature is still in early development, expect bugs and missing features.
+
+The stack can be run in `Validium mode`. In this mode, data availability is pushed to the L2, which means state diffs are not stored on the L1 anymore. To run the stack in validium mode, pass the `VALIDIUM` flag as `true` to the `deps` target, like so:
+
+```bash
+make deps VALIDIUM=true
+```
+
+You can find more info on validium mode [here](https://github.com/matter-labs/zksync-era/pull/459).

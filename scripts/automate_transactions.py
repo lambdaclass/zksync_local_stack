@@ -3,7 +3,7 @@ import random
 from time import sleep
 
 # Deploy ERC20 contract:
-# Run this command, and copy the output addres into erc20_address
+# Run this command in root directory, and copy the output addres into erc20_address
 # zksync-era-cli --l2-port 3050 deploy --project-root contracts/ --contract contracts/ERC20.sol  --contract-name ERC20 --constructor-args 0xde03a0B5963f75f1C8485B355fF6D30f3093BDE7 --private-key 0x27593fea79697e947890ecbecce7901b0008345e5d7259710d0dd5e500d040be --chain-id 270
 
 erc20_address = "0x755f0f59c65de6a9afd5267dc7c0546a0c05a23b"
