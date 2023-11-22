@@ -130,6 +130,7 @@ zksync-era-cli --l2-port 3050 call \
 --contract <address> \
 --function "name()" \
 --output-types string \
+--private-key 0x27593fea79697e947890ecbecce7901b0008345e5d7259710d0dd5e500d040be \
 --chain-id 270
 ```
 
@@ -148,6 +149,7 @@ zksync-era-cli --l2-port 3050 call \
 --function "balanceOf(address)" \
 --args "0xde03a0b5963f75f1c8485b355ff6d30f3093bde7" \
 --output-types uint256 \
+--private-key 0x27593fea79697e947890ecbecce7901b0008345e5d7259710d0dd5e500d040be \
 --chain-id 270
 ```
 
