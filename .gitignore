@@ -4,6 +4,7 @@ block-explorer
 zksync-era
 infrastructure/terraform/terraform.tfvars
 .vscode/
+.idea/
 infrastructure/terraform/.terraform.lock.hcl
 infrastructure/terraform/.terraform/
 infrastructure/terraform/terraform.tfstate
