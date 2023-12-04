@@ -10,3 +10,8 @@ infrastructure/terraform/.terraform/
 infrastructure/terraform/terraform.tfstate
 infrastructure/terraform/terraform.tfstate.backup
 target/
+
+# load testing
+*.csv
+__pycache__/
+wallets.json

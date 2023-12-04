@@ -25,23 +25,28 @@ def eth_transfer_command(from_pk, to_address):
     return f"zksync-era-cli --l2-port 3050 transfer --chain-id 270 --amount 1 --from {from_pk} --to {to_address}"
 
 
-wallets_with_money = setup.setup.create_wallets_with_money()
+# If wallets are all funded, set with_transfer to False
+wallets_with_money = setup.setup.create_wallets_with_money(with_transfer=False, quantity=1800)
 
 
 class ZkSyncWalletUser(HttpUser):
     wait_time = between(1, 5)
     host = "http://127.0.0.1:5000"
+    failed_wallets = {}
 
-    @task
+    #@task
     def check_balance(self):
         wallet = random.choice(wallets_with_money)
         self.client.post("/run", json={"command": eth_balance_command(wallet["address"])}, name="ETH Balance")
 
     @task
     def transfer_eth(self):
-        from_wallet = random.choice(wallets_with_money)
-        to_wallet = random.choice(wallets_with_money)
-        self.client.post("/run", json={"command": eth_transfer_command(from_wallet["privateKey"], to_wallet["address"])}, name="ETH Transfer")
+        from_wallet, to_wallet = random.sample(wallets_with_money, 2)
+        post_response = self.client.post("/run", json={"command": eth_transfer_command(from_wallet["privateKey"], to_wallet["address"])}, name="ETH Transfer")
+        if post_response.status_code != 200:
+            self.failed_wallets[from_wallet["address"]] = self.failed_wallets.get(from_wallet["address"], 0) + 1
+            self.failed_wallets[to_wallet["address"]] = self.failed_wallets.get(to_wallet["address"], 0) + 1
+            print(self.failed_wallets)
 
 # class ZkSyncContractUser(HttpUser):
 #    wait_time = between(1, 5)

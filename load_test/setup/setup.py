@@ -1,6 +1,3 @@
-# we are running setup everytime we run locust.
-# on setup, we redistribute our 10 rich wallets eths to have 100 rich wallets
-# therefore, there will be a time that rich wallets become poor
 import json
 import random
 import subprocess
@@ -9,6 +6,8 @@ from ecpy.curves import Curve
 from sha3 import keccak_256
 
 random.seed(42)
+
+
 def transfer_with(amount, from_pk, to_address):
     command = f"zksync-era-cli --l2-port 3050 transfer --chain-id 270 --amount {amount} --from {from_pk} --to {to_address}"
     return subprocess.check_output(command, shell=True, text=True)
@@ -24,7 +23,11 @@ def generate_new_wallet():
 
 def generate_private_key():
     pk = "".join(random.choices(["0", "1"], k=256))
-    return int(pk, base=2)
+    actual_int = int(pk, base=2)
+    if len(hex(actual_int)) != 66:
+        return generate_private_key()
+    return actual_int
+
 
 def get_address_from(private_key):
     cv = Curve.get_curve('secp256k1')
@@ -38,21 +41,21 @@ def get_address_from(private_key):
     return eth_addr
 
 
-def create_wallets_with_money():
+def create_wallets_with_money(with_transfer, quantity):
     with open("setup/rich-wallets.json") as f:
-        original_rich_wallet = json.load(f)  # tengo un json
+        original_rich_wallet = json.load(f)
 
-    # DUDA: Tiene sentido modelar la wallet con su Private key y su address? Por ahora son una lista de dict con keys
+    new_wallets = [generate_new_wallet() for _ in range(quantity)]
 
-    new_wallets = [generate_new_wallet() for _ in range(100)]  # genero 100 private keys y las keccakeo
-
-    total_transfered = 0
+    total_transferred = 0
+    range_to_use = int(quantity / len(original_rich_wallet))
     for wallet in original_rich_wallet:
-        for _ in range(10):
+        for _ in range(range_to_use):
             from_pk = wallet["privateKey"]
-            to = new_wallets[total_transfered]["address"]
+            to = new_wallets[total_transferred]["address"]
             amount = 4536975000000000000
-            transfer_with(amount, from_pk, to)
-            total_transfered = total_transfered + 1
+            if with_transfer:
+                transfer_with(amount, from_pk, to)
+            total_transferred = total_transferred + 1
 
     return new_wallets
