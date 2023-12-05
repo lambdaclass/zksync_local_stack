@@ -15,3 +15,4 @@ target/
 *.csv
 __pycache__/
 wallets.json
+/load_test/results/
