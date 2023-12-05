@@ -17,6 +17,7 @@ erc20_contract_transfer_command = "zksync-era-cli --l2-port 3050 send \
 --chain-id 270"
 
 
+
 def eth_balance_command(account):
     return f"zksync-era-cli --l2-port 3050 balance --account {account}"
 
@@ -26,7 +27,7 @@ def eth_transfer_command(from_pk, to_address):
 
 
 # If wallets are all funded, set with_transfer to False
-wallets_with_money = setup.setup.create_wallets_with_money(with_transfer=False, quantity=1800)
+wallets_with_money = setup.setup.create_wallets_with_money(with_transfer=False, quantity=100)
 
 
 class ZkSyncWalletUser(HttpUser):
