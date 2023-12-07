@@ -62,5 +62,6 @@ def test_03_loadtest_with_1000_users():
     print("Average Response Time: ", average_response_time, "ms")
 
 
-test_01_basic_loadtest_with_1_user()
+#test_01_basic_loadtest_with_1_user()
+test_02_loadtest_with_100_users()
 #test_03_loadtest_with_1000_users()
