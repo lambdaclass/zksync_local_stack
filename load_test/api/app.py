@@ -11,7 +11,8 @@ def run_command():
     assert "zksync-era-cli" == command[:14]
 
     try:
-        output = subprocess.check_output(command, shell=True, text=True)
+        #output = subprocess.check_output(command, shell=True, text=True)
+        output = subprocess.check_output(command, shell=True, stderr=subprocess.STDOUT, universal_newlines=True)
         return {"output": output}, 200
     except subprocess.CalledProcessError as e:
         return {"error": str(e)}, 400
