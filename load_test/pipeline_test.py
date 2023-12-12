@@ -24,7 +24,7 @@ class MyTestCase(unittest.TestCase):
         command = f"zksync-era-cli --host {self.host} --l2-port 3050 balance --account {self.rich_wallet}"
 
         output = subprocess.check_output(command, shell=True, stderr=subprocess.STDOUT, universal_newlines=True)
-
+        print(output)
         self.assertIsNotNone(output)
 
     def test_02_can_hit_the_chain_using_flask(self):

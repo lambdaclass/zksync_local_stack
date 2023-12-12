@@ -2,13 +2,11 @@ import random
 
 from locust import HttpUser, task, between
 
-import setup.setup
-
 from utils import eth_balance_command, eth_transfer_command
-
+from setup import create_wallets_with_money_for_zksync_stack
 
 # If wallets are all funded, set with_transfer to False
-wallets_with_money = setup.setup.create_wallets_with_money_for_zksync_stack(with_transfer=False, quantity=100)
+wallets_with_money = create_wallets_with_money_for_zksync_stack(with_transfer=True, quantity=10)
 
 
 class ZkSyncWalletUser(HttpUser):
@@ -26,7 +24,8 @@ class ZkSyncWalletUser(HttpUser):
     @task
     def transfer_eth(self):
         from_wallet, to_wallet = random.sample(wallets_with_money, 2)
-        post_response = self.client.post("/run", json={"command": eth_transfer_command(from_wallet["privateKey"], to_wallet["address"])}, name="ETH Transfer")
+        post_response = self.client.post("/run", json={"command": eth_transfer_command(from_wallet["privateKey"],
+                                                                                       to_wallet["address"], 1)}, name="ETH Transfer")
 
 
 # class ZkSyncContractUser(HttpUser):

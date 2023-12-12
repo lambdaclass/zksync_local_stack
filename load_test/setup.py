@@ -2,6 +2,8 @@ import json
 import random
 import subprocess
 
+
+from utils import eth_transfer_command
 from ecpy.curves import Curve
 from sha3 import keccak_256
 
@@ -9,7 +11,8 @@ random.seed(42)
 
 
 def transfer_with(amount, from_pk, to_address):
-    command = f"zksync-era-cli --l2-port 3050 transfer --chain-id 270 --amount {amount} --from {from_pk} --to {to_address}"
+    command = eth_transfer_command(from_pk, to_address, amount)
+    #command = f"zksync-era-cli --l2-port 3050 transfer --chain-id 270 --amount {amount} --from {from_pk} --to {to_address}"
     return subprocess.check_output(command, shell=True, text=True)
 
 
