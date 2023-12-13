@@ -1,4 +1,6 @@
 {
-  "host": "65.21.67.134",
+  "host": "127.0.0.1",
+  "fund_wallets": "True",
+  "amount_of_wallets": "100",
   "rich_wallet" : "0xde03a0b5963f75f1c8485b355ff6d30f3093bde7"
 }

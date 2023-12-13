@@ -1,3 +1,4 @@
+import json
 import random
 
 from locust import HttpUser, task, between
@@ -5,8 +6,14 @@ from locust import HttpUser, task, between
 from utils import eth_balance_command, eth_transfer_command
 from setup import create_wallets_with_money_for_zksync_stack
 
-# If wallets are all funded, set with_transfer to False
-wallets_with_money = create_wallets_with_money_for_zksync_stack(with_transfer=True, quantity=10)
+# Setup wallets from config
+config_file_path = 'config.json'
+with open(config_file_path, 'r') as file:
+    data = json.load(file)
+should_fund_wallets = data["fund_wallets"] == "True"
+amount_of_wallets = int(data["amount_of_wallets"])
+
+wallets_with_money = create_wallets_with_money_for_zksync_stack(with_transfer=should_fund_wallets, quantity=amount_of_wallets)
 
 
 class ZkSyncWalletUser(HttpUser):

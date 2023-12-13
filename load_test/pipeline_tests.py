@@ -27,7 +27,16 @@ class MyTestCase(unittest.TestCase):
         print(output)
         self.assertIsNotNone(output)
 
-    def test_02_can_hit_the_chain_using_flask(self):
+    def test_02_can_ask_for_balance_of_zksync_stack_rich_wallet(self):
+        command = f"zksync-era-cli --host {self.host} --l2-port 3050 balance --account 0xde03a0b5963f75f1c8485b355ff6d30f3093bde7"
+
+        output = subprocess.check_output(command, shell=True, stderr=subprocess.STDOUT, universal_newlines=True)
+        print(output)
+        account_balance = output.split()[-1]
+
+        self.assertEqual("157426552000000000", account_balance)
+
+    def test_03_can_hit_the_chain_using_flask(self):
         command = f"zksync-era-cli --host {self.host} --l2-port 3050 balance --account {self.rich_wallet}"
         response = -1
 
