@@ -1,4 +1,3 @@
-import json
 import random
 import subprocess
 
@@ -10,10 +9,9 @@ from sha3 import keccak_256
 random.seed(42)
 
 
-def transfer_with(amount, from_pk, to_address):
-    command = eth_transfer_command(from_pk, to_address, amount)
-    #command = f"zksync-era-cli --l2-port 3050 transfer --chain-id 270 --amount {amount} --from {from_pk} --to {to_address}"
-    return subprocess.check_output(command, shell=True, text=True)
+def transfer_with(node_host, amount, from_pk, to_address):
+    command = eth_transfer_command(node_host, from_pk, to_address, amount)
+    return subprocess.Popen(command, shell=True, text=True)
 
 
 def generate_new_wallet():
@@ -44,23 +42,23 @@ def get_address_from(private_key):
     return eth_addr
 
 
-def create_wallets_with_money(with_transfer, quantity):
-    with open("setup/rich-wallets.json") as f:
-        original_rich_wallet = json.load(f)
-
-    new_wallets = [generate_new_wallet() for _ in range(quantity)]
+def create_wallets_with_money(node_host, with_transfer, amount_of_wallets, rich_wallets):
+    new_wallets = [generate_new_wallet() for _ in range(amount_of_wallets)]
 
     total_transferred = 0
-    range_to_use = int(quantity / len(original_rich_wallet))
-    for wallet in original_rich_wallet:
-        for _ in range(range_to_use):
+    range_to_use = int(amount_of_wallets / len(rich_wallets))
+    for _ in range(range_to_use):
+        processes_to_wait = []
+        for wallet in rich_wallets:
             from_pk = wallet["privateKey"]
             to = new_wallets[total_transferred]["address"]
             amount = 4536975000000000000
             if with_transfer:
-                transfer_with(amount, from_pk, to)
+                process = transfer_with(node_host, amount, from_pk, to)
+                processes_to_wait.append(process)
             total_transferred = total_transferred + 1
-
+        for p in processes_to_wait:
+            p.wait()
     return new_wallets
 
 
