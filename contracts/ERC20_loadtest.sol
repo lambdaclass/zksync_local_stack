@@ -12,9 +12,9 @@ contract ERC20 is IERC20 {
     string private _name = "lambdacoin";
     string private _symbol = "LBDC";
 
-    constructor(address[] rich_accounts) {
+    constructor(address[] memory rich_accounts) {
         for (uint i = 0; i < rich_accounts.length; i = i+1){
-            balances[i] = 1000000;
+            balances[rich_accounts[i]] = 1000000;
         }
     }
 
