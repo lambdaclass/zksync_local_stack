@@ -16,3 +16,4 @@ target/
 __pycache__/
 wallets.json
 /load_test/results/
+config.json
