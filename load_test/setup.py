@@ -61,20 +61,7 @@ def create_wallets_with_money(node_host, with_transfer, amount_of_wallets, rich_
             p.wait()
     return new_wallets
 
-
-def create_wallets_with_money_for_zksync_stack(with_transfer, quantity):
-    rich_wallet_private_key = "0x27593fea79697e947890ecbecce7901b0008345e5d7259710d0dd5e500d040be"
-    rich_wallet_address = "0xde03a0b5963f75f1c8485b355ff6d30f3093bde7"
-
-    new_wallets = [generate_new_wallet() for _ in range(quantity)]
-
-    total_transferred = 0
-    for _ in range(quantity):
-        from_pk = rich_wallet_private_key
-        to = new_wallets[total_transferred]["address"]
-        amount = int(157426552000000000/100)
-        if with_transfer:
-            transfer_with(amount, from_pk, to)
-        total_transferred = total_transferred + 1
-
-    return new_wallets
+def deploy_erc20_with_wallets_with_money():
+    deploy_command = "zksync-era-cli --host 65.21.67.134 --l2-port 3050 deploy --project-root contracts/ --contract ../contracts/ERC20_loadtest.sol --contract-name ERC20 \
+                      --constructor-args 0xde03a0b5963f75f1c8485b355ff6d30f3093bde7 --private-key 0x27593fea79697e947890ecbecce7901b0008345e5d7259710d0dd5e500d040be --chain-id 270"
+    return subprocess.check_output(deploy_command, shell=True, text=True)
