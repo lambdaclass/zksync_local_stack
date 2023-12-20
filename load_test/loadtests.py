@@ -1,4 +1,5 @@
 import os
+
 import pandas as pd
 
 
@@ -30,8 +31,6 @@ def test_03_loadtest_with_500_users():
 
 
 def test_04_run_to_have_100_req_per_second():
-    # running this method you can
-    # it is recommended to have a config with N users
     time_limit = 60  # seconds
     number_of_users = 1000
     spawn_rate = 500
@@ -41,7 +40,7 @@ def test_04_run_to_have_100_req_per_second():
 
 
 def _run_loadtest(time_limit, number_of_users, spawn_rate):
-    locust_command = f"locust --headless -u {number_of_users} --spawn-rate {spawn_rate} --csv results/results --run-time {time_limit}"
+    locust_command = f"locust --headless -u {number_of_users} --spawn-rate {spawn_rate} --csv results/results --run-time {time_limit} -f locust/locustfile.py"
     os.system(locust_command)
 
 

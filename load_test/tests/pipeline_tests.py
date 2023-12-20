@@ -1,7 +1,6 @@
 import json
 import subprocess
 import unittest
-import os
 
 import requests
 

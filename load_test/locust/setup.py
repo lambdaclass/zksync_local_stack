@@ -1,10 +1,10 @@
 import random
 import subprocess
 
-
-from utils import eth_transfer_command
 from ecpy.curves import Curve
 from sha3 import keccak_256
+
+from utils import eth_transfer_command
 
 random.seed(42)
 
@@ -61,7 +61,8 @@ def create_wallets_with_money(node_host, with_transfer, amount_of_wallets, rich_
             p.wait()
     return new_wallets
 
-def deploy_erc20_with_wallets_with_money():
+
+def deploy_erc20_with_wallets_with_money(wallets_with_money):
     deploy_command = "zksync-era-cli --host 65.21.67.134 --l2-port 3050 deploy --project-root ../contracts/ --contract ../contracts/ERC20_loadtest.sol --contract-name ERC20 \
                       --constructor-args 0xde03a0b5963f75f1c8485b355ff6d30f3093bde7 --private-key 0x27593fea79697e947890ecbecce7901b0008345e5d7259710d0dd5e500d040be --chain-id 270"
     return subprocess.check_output(deploy_command, shell=True, text=True)
