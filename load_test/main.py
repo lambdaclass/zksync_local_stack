@@ -40,7 +40,7 @@ def test_04_run_to_have_100_req_per_second():
 
 
 def _run_loadtest(time_limit, number_of_users, spawn_rate):
-    locust_command = f"locust --headless -u {number_of_users} --spawn-rate {spawn_rate} --csv results/results --run-time {time_limit} -f locust/locustfile.py"
+    locust_command = f"locust --headless -u {number_of_users} --spawn-rate {spawn_rate} --csv results/results --run-time {time_limit} -f load_test/locust/locustfile.py"
     os.system(locust_command)
 
 

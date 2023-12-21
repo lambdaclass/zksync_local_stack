@@ -4,13 +4,18 @@ import subprocess
 from ecpy.curves import Curve
 from sha3 import keccak_256
 
-from utils import eth_transfer_command
+from utils import eth_transfer_command, erc20_transfer_command
 
 random.seed(42)
 
 
 def transfer_with(node_host, amount, from_pk, to_address):
     command = eth_transfer_command(node_host, from_pk, to_address, amount)
+    return subprocess.Popen(command, shell=True, text=True)
+
+
+def transfer_erc20(node_host, amount, from_pk, to, contract_address):
+    command = erc20_transfer_command(node_host, from_pk, to, amount, contract_address)
     return subprocess.Popen(command, shell=True, text=True)
 
 
@@ -62,7 +67,34 @@ def create_wallets_with_money(node_host, with_transfer, amount_of_wallets, rich_
     return new_wallets
 
 
-def deploy_erc20_with_wallets_with_money(wallets_with_money):
-    deploy_command = "zksync-era-cli --host 65.21.67.134 --l2-port 3050 deploy --project-root ../contracts/ --contract ../contracts/ERC20_loadtest.sol --contract-name ERC20 \
-                      --constructor-args 0xde03a0b5963f75f1c8485b355ff6d30f3093bde7 --private-key 0x27593fea79697e947890ecbecce7901b0008345e5d7259710d0dd5e500d040be --chain-id 270"
-    return subprocess.check_output(deploy_command, shell=True, text=True)
+def create_erc20_wallets_with_money(node_host, with_transfer, wallets, contract_owner_wallet, contract_address):
+    total_transferred = 0
+
+    for wallet in wallets:
+        amount = 1000
+        if with_transfer:
+            process = transfer_erc20(node_host, amount, contract_owner_wallet["privateKey"], wallet["address"], contract_address)
+            process.wait()
+        total_transferred = total_transferred + 1
+
+    return wallets
+
+
+def deploy_erc20_with_rich_account(host, contract_owner_wallet):
+    owner_wallet_address_ = contract_owner_wallet["address"]
+    owner_private_key = contract_owner_wallet["privateKey"]
+    deploy_command = f"zksync-era-cli --host {host} --l2-port 3050 deploy --project-root contracts/ --contract contracts/ERC20_loadtest.sol --contract-name ERC20 \
+                      --constructor-args {owner_wallet_address_} --private-key {owner_private_key} --chain-id 270"
+    result = subprocess.run(deploy_command, capture_output=True, shell=True, text=True)
+    last_line = result.stderr.splitlines()[-1] #zksync-era-cli bug. it returns all stdout into stderr
+    contract_address = last_line.split()[-1]
+    return contract_address
+
+
+def encode_address_array(wallets):
+    addresses = [wallet["address"] for wallet in wallets]
+
+    array_length = "0x0000000000000000000000000000000000000000000000000000000000000002"
+    address1 = "0x00000000000000000000000036615Cf349d7F6344891B1e7CA7C72883F5dc049"
+    address2 = "0x000000000000000000000000a61464658AfeAf65CccaaFD3a512b69A83B77618"
+    calldata = 0x000000000000000000000000000000000000000000000000000000000000000200000000000000000000000036615Cf349d7F6344891B1e7CA7C72883F5dc049000000000000000000000000a61464658AfeAf65CccaaFD3a512b69A83B77618

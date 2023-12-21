@@ -9,7 +9,7 @@ class MyTestCase(unittest.TestCase):
 
     def setUp(self) -> None:
         super().setUp()
-        config_file_path = 'config.json'
+        config_file_path = '../config.json'
         self.flask_url = "http://127.0.0.1:5000/run"
 
         # Open the file and load the data
