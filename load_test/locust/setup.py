@@ -41,9 +41,6 @@ def get_address_from(private_key):
 
     concat_x_y = pu_key.x.to_bytes(32, byteorder='big') + pu_key.y.to_bytes(32, byteorder='big')
     eth_addr = '0x' + keccak_256(concat_x_y).digest()[-20:].hex()
-
-    print('private key: ', hex(private_key))
-    print('eth_address: ', eth_addr)
     return eth_addr
 
 
