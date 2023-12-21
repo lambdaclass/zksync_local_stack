@@ -49,6 +49,7 @@ def create_wallets_with_money(node_host, with_transfer, amount_of_wallets, rich_
 
     total_transferred = 0
     range_to_use = int(amount_of_wallets / len(rich_wallets))
+
     for _ in range(range_to_use):
         processes_to_wait = []
         for wallet in rich_wallets:
@@ -70,7 +71,8 @@ def create_erc20_wallets_with_money(node_host, with_transfer, wallets, contract_
     for wallet in wallets:
         amount = 1000
         if with_transfer:
-            process = transfer_erc20(node_host, amount, contract_owner_wallet["privateKey"], wallet["address"], contract_address)
+            process = transfer_erc20(node_host, amount, contract_owner_wallet["privateKey"], wallet["address"],
+                                     contract_address)
             process.wait()
         total_transferred = total_transferred + 1
 
@@ -83,15 +85,6 @@ def deploy_erc20_with_rich_account(host, contract_owner_wallet):
     deploy_command = f"zksync-era-cli --host {host} --l2-port 3050 deploy --project-root contracts/ --contract contracts/ERC20_loadtest.sol --contract-name ERC20 \
                       --constructor-args {owner_wallet_address_} --private-key {owner_private_key} --chain-id 270"
     result = subprocess.run(deploy_command, capture_output=True, shell=True, text=True)
-    last_line = result.stderr.splitlines()[-1] #zksync-era-cli bug. it returns all stdout into stderr
+    last_line = result.stderr.splitlines()[-1]  # zksync-era-cli bug. it returns all stdout into stderr
     contract_address = last_line.split()[-1]
     return contract_address
-
-
-def encode_address_array(wallets):
-    addresses = [wallet["address"] for wallet in wallets]
-
-    array_length = "0x0000000000000000000000000000000000000000000000000000000000000002"
-    address1 = "0x00000000000000000000000036615Cf349d7F6344891B1e7CA7C72883F5dc049"
-    address2 = "0x000000000000000000000000a61464658AfeAf65CccaaFD3a512b69A83B77618"
-    calldata = 0x000000000000000000000000000000000000000000000000000000000000000200000000000000000000000036615Cf349d7F6344891B1e7CA7C72883F5dc049000000000000000000000000a61464658AfeAf65CccaaFD3a512b69A83B77618
