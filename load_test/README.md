@@ -16,12 +16,13 @@ Locust makes http requests to a local flask server that executes zksync-era-cli 
 
 * Run the flask server so that we can execute zksync-era-cli commands as http requests
 
-    `make run`
+    `make run.server`
 
-
+* Install `zksync-era-cli` to send transactions to the ZKSync node
 * Edit the `config.json` file with the correct ip of the chain you want to loadtest and other configs.
 * You may run `pipeline_tests.py` to verify the setup.
-* The loadtests are in `loadtests.py
+* Then, you can run the loadtests executing
+  `make run.loadtest`
 
 ### Config file
   The config file has the following:
