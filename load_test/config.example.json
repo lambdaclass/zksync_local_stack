@@ -1,0 +1,15 @@
+{
+  "node_host": "NODE_HOST_EXAMPLE",
+  "fund_wallets": "False",
+  "amount_of_wallets": "AMOUNT_OF_WALLETS",
+  "rich_wallets": [
+    {
+      "address": "address_1",
+      "privateKey": "pk_1"
+    },
+    {
+      "address": "address_2",
+      "privateKey": "pk_2"
+    }
+  ]
+}
