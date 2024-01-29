@@ -80,7 +80,11 @@ run:
 	tmux new -d -s zksync-server; \
 	tmux send-keys -t zksync-server "cd ${ZKSYNC_HOME} && export ZKSYNC_HOME=${ZKSYNC_HOME}" Enter; \
 	tmux send-keys -t zksync-server "./bin/zk up" Enter; \
-	tmux send-keys -t zksync-server "./bin/zk server --components=api,eth,tree,state_keeper,housekeeper,proof_data_handler" Enter
+	@if [ "$(VALIDIUM)" = "true" ]; then \
+		tmux send-keys -t zksync-server "VALIDIUM_MODE=true ./bin/zk server --components=api,eth,tree,state_keeper,housekeeper,proof_data_handler" Enter
+	else \
+		tmux send-keys -t zksync-server "./bin/zk server --components=api,eth,tree,state_keeper,housekeeper,proof_data_handler" Enter; \
+	fi
 	@if [ "$(PROVER)" = "cpu" ]; then \
 		cd ${ZKSYNC_HOME}/prover; \
 		./setup.sh; \
