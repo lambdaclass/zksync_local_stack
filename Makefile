@@ -5,6 +5,8 @@ SOLC_VERSION ?= v0.8.24
 export ZKSYNC_HOME=$(shell pwd)/zksync-era
 export PATH:=$(ZKSYNC_HOME)/bin:$(PATH)
 
+compilers_dir_name := eth-compilers
+
 deps:
 	@if [ "$(OS)" = "Darwin" ]; then \
 		brew install axel openssl postgresql tmux node@18; \
@@ -13,9 +15,9 @@ deps:
 		chmod a+x zksolc; \
 		curl -L https://github.com/ethereum/solidity/releases/download/$(SOLC_VERSION)/solc-macos --output solc; \
 		chmod a+x solc; \
-		mkdir -p $(HOME)/Library/Application\ Support/eth-compilers; \
-		mv solc $(HOME)/Library/Application\ Support/eth-compilers; \
-		mv zksolc $(HOME)/Library/Application\ Support/eth-compilers; \
+		mkdir -p $(HOME)/Library/Application\ Support/$(compilers_dir_name); \
+		mv solc $(HOME)/Library/Application\ Support/$(compilers_dir_name); \
+		mv zksolc $(HOME)/Library/Application\ Support/$(compilers_dir_name); \
 	else \
 		curl -s https://raw.githubusercontent.com/nodesource/distributions/master/scripts/nsolid_setup_deb.sh | sudo sh -s "18"; \
 		sudo apt update; \
@@ -27,9 +29,9 @@ deps:
 		chmod a+x solc; \
 		chmod a+x /usr/local/bin/docker-compose; \
 		chmod a+x zksolc; \
-		mkdir -p $(HOME)/.config/eth-compilers; \
-		mv solc $(HOME)/.config/eth-compilers; \
-		mv zksolc $(HOME)/.config/eth-compilers; \
+		mkdir -p $(HOME)/.config/$(compilers_dir_name); \
+		mv solc $(HOME)/.config/$(compilers_dir_name); \
+		mv zksolc $(HOME)/.config/$(compilers_dir_name); \
 		npm i -g npm@9; \
 		npm install --global yarn; \
 	fi
