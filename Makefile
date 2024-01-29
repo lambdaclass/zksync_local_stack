@@ -43,7 +43,7 @@ deps:
 	@if [ "$(OS)" = "Linux" ]; then \
 		sudo service postgresql stop; \
 	fi
-	git clone -b boojum-integration https://github.com/matter-labs/zksync-era; \
+	git clone https://github.com/matter-labs/zksync-era; \
 	git clone https://github.com/matter-labs/block-explorer; \
 	cd ${ZKSYNC_HOME}; \
 	git remote add lambdaclass https://github.com/lambdaclass/zksync-era; \
