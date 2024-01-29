@@ -1,5 +1,5 @@
 OS := $(shell uname -s)
-VALIDIUM ?= false
+VALIDIUM_MODE ?= false
 ZKSOLC_VERSION ?= v1.3.22
 SOLC_VERSION ?= v0.8.24
 export ZKSYNC_HOME=$(shell pwd)/zksync-era
@@ -48,13 +48,13 @@ deps:
 	cd ${ZKSYNC_HOME}; \
 	git remote add lambdaclass https://github.com/lambdaclass/zksync-era; \
 	git fetch lambdaclass;
-	@if [ "$(VALIDIUM)" = "true" ]; then \
+	@if [ "$(VALIDIUM_MODE)" = "true" ]; then \
 		git checkout lambdaclass/validium_mode_new_fee_model_final; \
 	fi
 	yarn policies set-version 1.22.19; \
 	. $(HOME)/.cargo/env; \
 	zk;
-	@if [ "$(VALIDIUM)" = "true" ]; then \
+	@if [ "$(VALIDIUM_MODE)" = "true" ]; then \
 		zk init --validium-mode; \
 	else \
 		zk init; \
@@ -80,7 +80,7 @@ run:
 	tmux new -d -s zksync-server; \
 	tmux send-keys -t zksync-server "cd ${ZKSYNC_HOME} && export ZKSYNC_HOME=${ZKSYNC_HOME}" Enter; \
 	tmux send-keys -t zksync-server "./bin/zk up" Enter; \
-	@if [ "$(VALIDIUM)" = "true" ]; then \
+	@if [ "$(VALIDIUM_MODE)" = "true" ]; then \
 		tmux send-keys -t zksync-server "VALIDIUM_MODE=true ./bin/zk server --components=api,eth,tree,state_keeper,housekeeper,proof_data_handler" Enter
 	else \
 		tmux send-keys -t zksync-server "./bin/zk server --components=api,eth,tree,state_keeper,housekeeper,proof_data_handler" Enter; \
