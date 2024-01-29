@@ -49,7 +49,7 @@ deps:
 	git remote add lambdaclass https://github.com/lambdaclass/zksync-era; \
 	git fetch lambdaclass;
 	@if [ "$(VALIDIUM)" = "true" ]; then \
-		git checkout lambdaclass/validium; \
+		git checkout lambdaclass/validium_mode_new_fee_model_final; \
 	fi
 	yarn policies set-version 1.22.19; \
 	. $(HOME)/.cargo/env; \
