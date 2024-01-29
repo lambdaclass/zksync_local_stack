@@ -1,5 +1,7 @@
 OS := $(shell uname -s)
 VALIDIUM ?= false
+ZKSOLC_VERSION ?= v1.3.22
+SOLC_VERSION ?= v0.8.24
 export ZKSYNC_HOME=$(shell pwd)/zksync-era
 export PATH:=$(ZKSYNC_HOME)/bin:$(PATH)
 
@@ -7,9 +9,9 @@ deps:
 	@if [ "$(OS)" = "Darwin" ]; then \
 		brew install axel openssl postgresql tmux node@18; \
 		brew link node@18 --overwrite; \
-		curl -L https://github.com/matter-labs/zksolc-bin/releases/download/v1.3.16/zksolc-macosx-arm64-v1.3.16 --output zksolc; \
+		curl -L https://github.com/matter-labs/zksolc-bin/releases/download/$(ZKSOLC_VERSION)/zksolc-macosx-arm64-$(ZKSOLC_VERSION) --output zksolc; \
 		chmod a+x zksolc; \
-		curl -L https://github.com/ethereum/solidity/releases/download/v0.8.19/solc-macos --output solc; \
+		curl -L https://github.com/ethereum/solidity/releases/download/$(SOLC_VERSION)/solc-macos --output solc; \
 		chmod a+x solc; \
 		mkdir -p $(HOME)/Library/Application\ Support/eth-compilers; \
 		mv solc $(HOME)/Library/Application\ Support/eth-compilers; \
@@ -20,8 +22,8 @@ deps:
 		sudo apt install -y axel libssl-dev nsolid postgresql tmux git build-essential pkg-config cmake clang lldb lld; \
 		curl -fsSL https://get.docker.com | sh; \
 		curl -SL https://github.com/docker/compose/releases/download/v2.23.0/docker-compose-linux-x86_64 -o /usr/local/bin/docker-compose; \
-		curl -L https://github.com/matter-labs/zksolc-bin/releases/download/v1.3.16/zksolc-linux-amd64-musl-v1.3.16 --output zksolc; \
-		curl -L https://github.com/ethereum/solidity/releases/download/v0.8.19/solc-static-linux --output solc; \
+		curl -L https://github.com/matter-labs/zksolc-bin/releases/download/$(ZKSOLC_VERSION)/zksolc-linux-amd64-musl-$(ZKSOLC_VERSION) --output zksolc; \
+		curl -L https://github.com/ethereum/solidity/releases/download/$(SOLC_VERSION)/solc-static-linux --output solc; \
 		chmod a+x solc; \
 		chmod a+x /usr/local/bin/docker-compose; \
 		chmod a+x zksolc; \
