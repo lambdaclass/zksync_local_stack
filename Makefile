@@ -55,7 +55,7 @@ deps:
 	. $(HOME)/.cargo/env; \
 	zk;
 	@if [ "$(VALIDIUM)" = "true" ]; then \
-		zk init --validium; \
+		zk init --validium-mode; \
 	else \
 		zk init; \
 	fi
